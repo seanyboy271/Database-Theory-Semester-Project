@@ -36,7 +36,7 @@ db = sqlalchemy.create_engine("mysql+pymysql://root:password@/test?127.0.0.1/" +
 @app.route('/', methods=["GET"])
 def main():
 
-    return render_template("index.html")
+    return render_template("dashboard.html")
 
     # try: 
     #     with db.connect() as conn:
@@ -97,6 +97,53 @@ def VehicleWithPC():
 #Input: None
 #Output: Arbitrator systems with bad status codes
 @app.route('/ArbitratorWithBadStatusCodes', methods=["GET"])    
+@app.route('/vehicle', methods=["GET"])
+def vehicles():
+
+    return render_template("vehicle.html")
+
+@app.route('/mobilecomputer', methods=["GET"])
+def mobilecomputer():
+
+    return render_template("mobilecomputer.html")
+
+@app.route('/mobilecomputerdock', methods=["GET"])
+def mobilecomputerdock():
+
+    return render_template("mobilecomputerdock.html")
+
+@app.route('/arbitrator', methods=["GET"])
+def arbitrator():
+
+    return render_template("arbitrator.html")
+
+
+@app.route('/cradlepoint', methods=["GET"])
+def cradlepoint():
+
+    return render_template("cradlepoint.html")
+
+@app.route('/keyboard', methods=["GET"])
+def keyboard():
+
+    return render_template("keyboard.html")
+
+@app.route('/softwarestatus', methods=["GET"])
+def softwarestatus():
+
+    return render_template("softwarestatus.html")
+
+@app.route('/frontcamera', methods=["GET"])
+def frontcamera():
+
+    return render_template("frontcamera.html")
+
+@app.route('/backcamera', methods=["GET"])
+def backcamera():
+
+    return render_template("backcamera.html")
+
+
         
 
 if __name__=='__main__':
