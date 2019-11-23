@@ -47,9 +47,61 @@ def main():
     # except Exception as e:
     #     return "it broke " + str(e)
 
-#11
-#Input: PCName
-#Output:unitNumber
+# 1
+# Input: 
+# Output: 
+@app.route('/', methods=["GET"])
+
+# 2
+# Input: 
+# Output: 
+@app.route('/', methods=["GET"])
+
+# 3
+# Input: 
+# Output: 
+@app.route('/', methods=["GET"])
+
+
+# 4
+# Input: 
+# Output: 
+@app.route('/', methods=["GET"])
+
+# 5
+# Input: 
+# Output:
+@app.route('/', methods=["GET"])
+
+# 6
+# Input: 
+# Output:
+@app.route('/', methods=["GET"])
+
+# 7
+# Input: 
+# Output:
+@app.route('/', methods=["GET"])
+
+# 8
+# Input: 
+# Output:
+@app.route('/', methods=["GET"])
+
+# 9
+# Input: 
+# Output:
+@app.route('/', methods=["GET"])
+
+# 10
+# Input: 
+# Output:
+@app.route('/', methods=["GET"])
+
+
+# 11
+# Input: PCName
+# Output: unitNumber
 @app.route('/VehicleWithPC', methods=["GET"])
 def VehicleWithPC():
     args = request.args
@@ -64,14 +116,13 @@ def VehicleWithPC():
     except Exception as e:
         return "it broke " + str(e)
 
-#12
-#Input: PCName
-#Output: serialNumber
+# 12
+# Input: PCName
+# Output: serialNumber
 @app.route('/PCSerialNumber', methods=["GET"])
 def PCSerialNumber():
     args = request.args
     PCName = args['PCName']
-
 
     try:
         with db.connect() as conn:
@@ -83,10 +134,9 @@ def PCSerialNumber():
         return "it broke " + str(e)
 
 
-
-#13
-#Input: unitNumber
-#Output: Cradlepoint card number
+# 13
+# Input: unitNumber
+# Output: Cradlepoint card number
 @app.route('/CradlePointCardNumber', methods=["GET"])
 def CradlePointCardNumber():
     args = request.args
@@ -102,51 +152,118 @@ def CradlePointCardNumber():
         return "it broke " + str(e)
 
 
-#14
-#Input: None
-#Output: Number of computers being used by IT
+# 14
+# Input: None
+# Output: Number of computers being used by IT
 @app.route('/ITComputers', methods=["GET"])
+def ITComputers():
+    try:
+        with db.connect() as conn:
+            query = 'select count(serialNumber) as "Number of Computers" from MobileComputer where PCName = \"IT\"'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
 
+    except Exception as e:
+        return "it broke " + str(e)
 
-#15
-#Input: PCName
-#Output: bitlocker key
+# 15
+# Input: PCName
+# Output: bitlocker key
 @app.route('/BitlockerKey', methods=["GET"])
+def BitlockerKey():
+    args = request.args
+    PCName = args['PCName']
+
+    try:
+        with db.connect() as conn:
+            query = 'Select bitLockerKey from MobileComputer where PCName = \'' + PCName +  '\''
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
 
 
-
-#16
-#Input: None
-#Output: Cars with short dock stands
+# 16
+# Input: None
+# Output: Cars with short dock stands
 @app.route('/VehiclesWithShortDock', methods=["GET"])
+def VehiclesWithShortDock():
+    try:
+        with db.connect() as conn:
+            query = 'select V.* from Dock join MobileComputerDock MCD on Dock.SerialNumber = MCD.dock_serialNumber join MobileComputer MC on MCD.computer_serialNumber = MC.serialNumber join VehicleComputer VC on MC.serialNumber = VC.serialNumber join Vehicle V on VC.unitNumber = V.unitNumber where Dock.standType = "short"'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
 
 
 
-#17
-#Input: None
-#Output: Number of vehicles with front and rear arbitrator systems
+# 17
+# Input: None
+# Output: Number of vehicles with front and rear arbitrator systems
 @app.route('/VehiclesWithFrontAndRearCamera', methods=["GET"])
+def VehiclesWithFrontAndRearCamera():
+    try:
+        with db.connect() as conn:
+            query = 'select count(VAS.unitNumber) as "Number of Vehicles" from ArbitratorSystem join VehicleArbitratorSystem VAS on ArbitratorSystem.ID = VAS.ID where hasFrontCamera = TRUE and hasRearCamera = TRUE'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
 
 
-
-#18
-#Input: unitNumber
-#Output: Number of Bad Bois caught
+# 18
+# Input: unitNumber
+# Output: Number of Bad Bois caught
 @app.route('/BadBois', methods=["GET"])
+def BadBois():
+    args = request.args
+    unitNumber = args['unitNumber']
+
+    try:
+        with db.connect() as conn:
+            query = 'select badBoysCaught from Vehicle where unitNumber = \'' + unitNumber + '\''
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
 
 
-
-#19
-#Input: None
-#Output: Computers that have a keyboard but no computer
+# 19
+# Input: None
+# Output: Computers that have a keyboard but no computer
 @app.route('/VehiclesWithKeyboardAndNoComputer', methods=["GET"])
+def VehiclesWithKeyboardAndNoComputer():
+    try:
+        with db.connect() as conn:
+            query = 'select * from Vehicle join VehicleKeyboard on Vehicle.unitNumber = VehicleKeyboard.unitNumber where Vehicle.unitNumber not in(select Vehicle.unitNumber from Vehicle join VehicleComputer on Vehicle.unitNumber = VehicleComputer.unitNumber)'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
+
+
+# 20
+# Input: None
+# Output: Arbitrator systems with bad status codes
+@app.route('/ArbitratorWithBadStatusCodes', methods=["GET"])
+def ArbitratorWithBadStatusCodes():
+    try:
+        with db.connect() as conn:
+            query = 'select * from ArbitratorSystem join ArbitratorSystemFrontCamera ASFC on ArbitratorSystem.ID = ASFC.ID join ArbitratorSystemRearCamera ASRC on ArbitratorSystem.ID = ASRC.ID join FrontCamera FC on ASFC.CameraID = FC.cameraID join RearCamera RC on ASRC.CameraID = RC.cameraID where FC.status = "Broken" or RC.status = "Broken"'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
 
 
 
-#20
-#Input: None
-#Output: Arbitrator systems with bad status codes
-@app.route('/ArbitratorWithBadStatusCodes', methods=["GET"])    
 @app.route('/vehicle', methods=["GET"])
 def vehicles():
 
