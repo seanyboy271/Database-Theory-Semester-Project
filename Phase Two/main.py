@@ -1,7 +1,8 @@
 # [START imports]
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request,json
 import sqlalchemy
 import os
+import pandas as pd
 
 
 
@@ -56,9 +57,9 @@ def VehicleWithPC():
 
     try:
         with db.connect() as conn:
-            query = db.Select([Vehicle.unitNumber])
-            result = conn.execute(query)
-            return jsonify(unitNumber=result)
+            query = 'select v.unitNumber from Vehicle v join VehicleComputer c on v.unitNumber = c.unitNumber join MobileComputer MC on c.serialNumber = MC.serialNumber where PCName = \'' + PCName + '\''
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
 
     except Exception as e:
         return "it broke " + str(e)
@@ -67,41 +68,80 @@ def VehicleWithPC():
 #Input: PCName
 #Output: serialNumber
 @app.route('/PCSerialNumber', methods=["GET"])
+def PCSerialNumber():
+    args = request.args
+    PCName = args['PCName']
+
+
+    try:
+        with db.connect() as conn:
+            query = 'Select serialNumber from MobileComputer where PCName = \'' + PCName + '\''
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
+
+
 
 #13
 #Input: unitNumber
 #Output: Cradlepoint card number
 @app.route('/CradlePointCardNumber', methods=["GET"])
+def CradlePointCardNumber():
+    args = request.args
+    unitNumber = args['unitNumber']
+
+    try:
+        with db.connect() as conn:
+            query = 'Select serialNumber from MobileComputer where PCName = \'' + PCName + '\''
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
+
 
 #14
 #Input: None
 #Output: Number of computers being used by IT
 @app.route('/ITComputers', methods=["GET"])
 
+
 #15
 #Input: PCName
 #Output: bitlocker key
 @app.route('/BitlockerKey', methods=["GET"])
+
+
 
 #16
 #Input: None
 #Output: Cars with short dock stands
 @app.route('/VehiclesWithShortDock', methods=["GET"])
 
+
+
 #17
 #Input: None
 #Output: Number of vehicles with front and rear arbitrator systems
 @app.route('/VehiclesWithFrontAndRearCamera', methods=["GET"])
+
+
 
 #18
 #Input: unitNumber
 #Output: Number of Bad Bois caught
 @app.route('/BadBois', methods=["GET"])
 
+
+
 #19
 #Input: None
 #Output: Computers that have a keyboard but no computer
 @app.route('/VehiclesWithKeyboardAndNoComputer', methods=["GET"])
+
+
 
 #20
 #Input: None
