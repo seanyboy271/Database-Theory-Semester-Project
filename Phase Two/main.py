@@ -51,7 +51,17 @@ def main():
 #Output:unitNumber
 @app.route('/VehicleWithPC', methods=["GET"])
 def VehicleWithPC():
-    query = 'select v.unitNumber from Vehicle v join VehicleComputer c on v.unitNumber = c.unitNumber join MobileComputer MC on c.serialNumber = MC.serialNumberwhere PCName = enter pc name here'
+    args = request.args
+    PCName = args['PCName']
+
+    try:
+        with db.connect() as conn:
+            query = db.Select([Vehicle.unitNumber])
+            result = conn.execute(query)
+            return jsonify(unitNumber=result)
+
+    except Exception as e:
+        return "it broke " + str(e)
 
 #12
 #Input: PCName
