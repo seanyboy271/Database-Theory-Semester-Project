@@ -4,4 +4,4 @@ env_variables:
   CLOUD_SQL_CONNECTION_NAME: cmsc-508-project:us-east1:cmsc-508-database
   DB_USER: root
   DB_PASS: password
-  DB_NAME: test
+  DB_NAME: 508ProjectDatabase

@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 
 ##this is for testing
-db = sqlalchemy.create_engine("mysql+pymysql://root:password@/test?127.0.0.1/" + str(cloud_sql_connection_name))
+db = sqlalchemy.create_engine("mysql+pymysql://root:password@/508ProjectDatabase?127.0.0.1/" + str(cloud_sql_connection_name))
 
 ##This is for deployment
 # db = sqlalchemy.create_engine(
