@@ -1,20 +1,20 @@
 function VehicleViewModel() {
     self = this;
 
-    self.vehicles = ko.observable('test');
+    self.vehicles = ko.observableArray([]);
 
-    self.getVehicles = function() {
+    self.getVehicles = function () {
         $.ajax({
-                dataType: "json",
-                url: '/VehicleWithPC'
-            })
-            .done(function(response) {
-                alert('done');
-                self.vehicles(response);
-            })
-            .fail(function(response) {
-                alert('Error:' + response);
-            });
+            dataType: "json",
+            url: '/vehicle/all',
+            success: function (data, textStatus, XmlHttpRequest) {
+                console.log(data);
+                self.vehicles(data);
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
     };
 
     self.getVehicles();

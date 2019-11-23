@@ -152,6 +152,19 @@ def vehicles():
 
     return render_template("vehicle.html")
 
+
+@app.route('/vehicle/all', methods=["GET"])
+def vehicles_all():
+    try:
+        with db.connect() as conn:
+            query = 'select * from Vehicle'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
+
+
 @app.route('/mobilecomputer', methods=["GET"])
 def mobilecomputer():
 

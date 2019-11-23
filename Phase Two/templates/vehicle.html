@@ -1,18 +1,29 @@
-{%  extends 'base.html' %}
+{% extends 'base.html' %}
 {% block content %}
 
-<!-- Breadcrumbs-->
-<ol class="breadcrumb">
-  <li class="breadcrumb-item">
-    <a href="/">Inventory</a>
-  </li>
-  <li class="breadcrumb-item active">Vehicles</li>
-</ol>
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/">Inventory</a>
+        </li>
+        <li class="breadcrumb-item active">Vehicles</li>
+    </ol>
 
-<!-- Page Content -->
-<h1>Vehicles</h1>
-<hr>
-    <span data-bind="text: vehicles"></span>
+    <!-- Page Content -->
+    <h1>Vehicles</h1>
+    <hr>
+    <div class="row" data-bind="foreach: vehicles">
+        <div class="col-xl-3 col-sm-6 mb-3" style="padding: 8px;">
+            <div class="card">
+                <div class="card-body">
+                    <h2 data-bind="text: unitNumber"></h2>
+                    <span data-bind="text: Make"></span> <span data-bind="text: model"></span><br/>
+                    Bad Boys Caught: <span data-bind="text: badBoysCaught"></span><br/>
+                    Last Modified: <span data-bind="text: lastModifyDate"></span>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
 
