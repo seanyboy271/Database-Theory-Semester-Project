@@ -46,7 +46,58 @@ def main():
     # except Exception as e:
     #     return "it broke " + str(e)
 
+#11
+#Input: PCName
+#Output:unitNumber
+@app.route('/VehicleWithPC', methods=["GET"])
+def VehicleWithPC():
+    query = 'select v.unitNumber from Vehicle v join VehicleComputer c on v.unitNumber = c.unitNumber join MobileComputer MC on c.serialNumber = MC.serialNumberwhere PCName = enter pc name here'
+
+#12
+#Input: PCName
+#Output: serialNumber
+@app.route('/PCSerialNumber', methods=["GET"])
+
+#13
+#Input: unitNumber
+#Output: Cradlepoint card number
+@app.route('/CradlePointCardNumber', methods=["GET"])
+
+#14
+#Input: None
+#Output: Number of computers being used by IT
+@app.route('/ITComputers', methods=["GET"])
+
+#15
+#Input: PCName
+#Output: bitlocker key
+@app.route('/BitlockerKey', methods=["GET"])
+
+#16
+#Input: None
+#Output: Cars with short dock stands
+@app.route('/VehiclesWithShortDock', methods=["GET"])
+
+#17
+#Input: None
+#Output: Number of vehicles with front and rear arbitrator systems
+@app.route('/VehiclesWithFrontAndRearCamera', methods=["GET"])
+
+#18
+#Input: unitNumber
+#Output: Number of Bad Bois caught
+@app.route('/BadBois', methods=["GET"])
+
+#19
+#Input: None
+#Output: Computers that have a keyboard but no computer
+@app.route('/VehiclesWithKeyboardAndNoComputer', methods=["GET"])
+
+#20
+#Input: None
+#Output: Arbitrator systems with bad status codes
+@app.route('/ArbitratorWithBadStatusCodes', methods=["GET"])    
         
 
-if __name__=='__main__':    
+if __name__=='__main__':
     app.run(debug=True)
