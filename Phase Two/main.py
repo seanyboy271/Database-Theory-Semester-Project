@@ -494,6 +494,15 @@ def backcamera():
 
     return render_template("backcamera.html")
 
+@app.route('/deleteVehicle/<unitNumber>', methods=["POST"])
+def deleteVehicle():
+    try:
+        with db.connect() as conn:
+            query = 'call deleteVehicle(\'' + unitNumber + '\')'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+    except Exception as e:
+        return "it brokedead " + str(e)
 
         
 
