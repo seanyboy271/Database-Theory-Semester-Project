@@ -47,6 +47,35 @@ def main():
     # except Exception as e:
     #     return "it broke " + str(e)
 
+#Login Route
+# This can be fairly simple, although we should not store the plain text passwords since she wants security
+# We also need to figure out how to give permissions to certain users
+@app.route('/login', methods=["GET"])
+def login():
+    ##Add login code here
+
+
+
+#We need to have an update, delete, and insert for each 'major' table i.e vehicle, mobile computer, keyboards, dock, etc... There are 9 major tables, so 27 endpoints
+# We could use stored procedures for this so that it is possible to keep the linking tables updated with the new data. 
+# We could use triggers in place of the check() constraint to make sure tha data is valid
+# We could use views for the enpoints that dont take in any form of input or for very commonly used joins
+
+
+@app.route('/Insert_______', methods=["POST"])
+def Insert____________():
+    ##insert template
+
+
+@app.route('/Delete_______', methods=["DELETE"])
+def Delete___________():
+    ##Delete template
+
+
+@app.route('/Update__________', methods=["PUT"])
+def Update____________():
+    ##Update template
+
 # 1
 # Input: None 
 # Output: unitNumber, lastVideoUploadDate
