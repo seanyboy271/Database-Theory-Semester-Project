@@ -118,8 +118,6 @@ def PCNameInVehicle():
         return "it broke " + str(e)
 
 
-
-
 # 5
 # Input: None
 # Output: unitNumber
@@ -314,13 +312,16 @@ def BitlockerKey():
 
 
 # 16
-# Input: None
+# Input: dockType
 # Output: Cars with short dock stands
-@app.route('/VehiclesWithShortDock', methods=["GET"])
-def VehiclesWithShortDock():
+@app.route('/VehiclesWithDockType', methods=["GET"])
+def VehiclesWithDockType():
+    args = request.args
+    dockType = args["dockType"]
+
     try:
         with db.connect() as conn:
-            query = 'select V.* from Dock join MobileComputerDock MCD on Dock.SerialNumber = MCD.dock_serialNumber join MobileComputer MC on MCD.computer_serialNumber = MC.serialNumber join VehicleComputer VC on MC.serialNumber = VC.serialNumber join Vehicle V on VC.unitNumber = V.unitNumber where Dock.standType = "short"'
+            query = 'select V.* from Dock join MobileComputerDock MCD on Dock.SerialNumber = MCD.dock_serialNumber join MobileComputer MC on MCD.computer_serialNumber = MC.serialNumber join VehicleComputer VC on MC.serialNumber = VC.serialNumber join Vehicle V on VC.unitNumber = V.unitNumber where Dock.standType = \'' + dockType + '\''
             result = conn.execute(query).fetchall()
             return json.dumps([dict(r) for r in result])
 
