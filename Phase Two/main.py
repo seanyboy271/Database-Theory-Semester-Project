@@ -48,55 +48,184 @@ def main():
     #     return "it broke " + str(e)
 
 # 1
-# Input: 
-# Output: 
-@app.route('/', methods=["GET"])
+# Input: None 
+# Output: unitNumber, lastVideoUploadDate
+@app.route('/VehicleWithRecentlyUploaded', methods=["GET"])
+def VehicleWithRecentlyUploaded():
+    try:
+        with db.connect() as conn:
+            query = 'SELECT V.unitNumber, Arb.lastVideoUpdate FROM Vehicle V JOIN VehicleArbitratorSystem VAS ON V.unitNumber = VAS.unitNumber JOIN ArbitratorSystem Arb ON VAS.ID = Arb.ID ORDER BY lastVideoUpdate DESC;'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
+
+
 
 # 2
-# Input: 
-# Output: 
-@app.route('/', methods=["GET"])
+# Input: gpsComPort
+# Output: unitNumber
+@app.route('/VehiclesOnComPort', methods=["GET"])
+def VehiclesOnComPort():
+    args = request.args
+    gpsComPort = args['gpsComPort']
+
+    try:
+        with db.connect() as conn:
+            query = 'SELECT V.unitNumberFROM Vehicle V JOIN VehicleComputer VC ON V.unitNumber = VC.unitNumber JOIN MobileComputer C ON C.serialNumber = VC.serialNumber WHERE gpsComPort = \'' + gpsComPort + '\''
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
+
 
 # 3
-# Input: 
-# Output: 
-@app.route('/', methods=["GET"])
+# Input: unitNumber
+# Output: cableColor
+@app.route('/CradlepointCableColor', methods=["GET"])
+def CradlepointCableColor():
+    args = request.args
+    unitNumber = args['unitNumber']
+
+    try:
+        with db.connect() as conn:
+            query = 'SELECT cableColor FROM VehicleCradlepoint NATURAL JOIN CradlePoint WHERE VehicleCradlepoint.unitNumber = \'' + unitNumber + '\''
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
+
 
 
 # 4
-# Input: 
-# Output: 
-@app.route('/', methods=["GET"])
+# Input: unitNumber
+# Output: PCName
+@app.route('/PCNameInVehicle', methods=["GET"])
+def PCNameInVehicle():
+    args = request.args
+    unitNumber = args['unitNumber']
+
+    try:
+        with db.connect() as conn:
+            query = 'SELECT PCName FROM MobileComputer MC JOIN VehicleComputer VC ON MC.serialNumber = VC.serialNumber JOIN Vehicle V ON VC.unitNumber = V.unitNumber WHERE V.unitNumber = \'' + unitNumber + '\''
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
+
+
+
 
 # 5
-# Input: 
-# Output:
-@app.route('/', methods=["GET"])
+# Input: None
+# Output: unitNumber
+@app.route('/NewestArbitratorVersionVehicle', methods=["GET"])
+def NewestArbitratorVersionVehicle():
+    try:
+        with db.connect() as conn:
+            query = 'SELECT V.unitNumber FROM Vehicle V JOIN VehicleComputer VC ON V.unitNumber = VC.unitNumber JOIN MobileComputer MC ON VC.serialNumber = MC.serialNumber JOIN ComputerSoftwareStatus CSS ON MC.serialNumber = CSS.serialNumber WHERE CSS.ArbitratorVersion LIKE "NEW";'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
+
+
 
 # 6
-# Input: 
-# Output:
-@app.route('/', methods=["GET"])
+# Input: mobileComputerSerialNumber
+# Output: computer model
+@app.route('/MobileComputerModel', methods=["GET"])
+def MobileComputerModel():
+    args = request.args
+    serialNumber = args['serialNumber']
+
+    try:
+        with db.connect() as conn:
+            query = 'SELECT model FROM MobileComputer WHERE serialNumber = \'' + serialNumber + '\''
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
+
+
 
 # 7
-# Input: 
-# Output:
-@app.route('/', methods=["GET"])
+# Input: keyboard serial number
+# Output: hasStickyKeys
+@app.route('/HasStickyKeys', methods=["GET"])
+def HasStickyKeys():
+    args = request.args
+    serialNumber = args['serialNumber']
+
+    try:
+        with db.connect() as conn:
+            query = 'SELECT hasStickyKeys FROM Keyboard WHERE serialNumber = \'' + serialNumber + '\''
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
+
+
 
 # 8
-# Input: 
-# Output:
-@app.route('/', methods=["GET"])
+# Input: PCName
+# Output: dock serialNumber
+@app.route('/ComputerDock', methods=["GET"])
+def ComputerDock():
+    args = request.args
+    PCName = args['PCName']
+
+    try:
+        with db.connect() as conn:
+            query = 'SELECT D.serialNumber FROM Dock D JOIN MobileComputerDock MCD ON D.serialNumber = MCD.dock_serialNumber JOIN MobileComputer MC ON MCD.computer_serialNumber = MC.serialNumber WHERE MC.PCName = \'' + PCName + '\''
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
+
+
 
 # 9
-# Input: 
-# Output:
-@app.route('/', methods=["GET"])
+# Input: unitNumber
+# Output: lastModifyDate
+@app.route('/LatModifyDate', methods=["GET"])
+def LatModifyDate():
+    args = request.args
+    unitNumber = args['unitNumber']
+
+    try:
+        with db.connect() as conn:
+            query = 'SELECT lastModifyDate FROM Vehicle WHERE unitNumber = \'' + unitNumber + '\''
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
+
+
 
 # 10
-# Input: 
-# Output:
-@app.route('/', methods=["GET"])
+# Input: none
+# Output: unitNumber, lastModifyDate
+@app.route('/VehcleWithOldestInpectionDate', methods=["GET"])
+def VehcleWithOldestInpectionDate():
+    try:
+        with db.connect() as conn:
+            query = 'SELECT unitNumber, lastModifyDate FROM Vehicle ORDER BY lastModifyDate ASC LIMIT 1;'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
+    
 
 
 # 11
