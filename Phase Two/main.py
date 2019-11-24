@@ -52,7 +52,19 @@ def main():
 # We also need to figure out how to give permissions to certain users
 @app.route('/login', methods=["GET"])
 def login():
-    ##Add login code here
+    args = request.args
+    userName = args["username"]
+    password = args["password"]
+    query = 'Select type from Users where username = \'' + userName + '\' and password = encode( \'' + password + '\', \'encryptKey\')'
+
+    print(query)
+    try:
+        with db.connect() as conn:
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
 
 
 
@@ -62,19 +74,19 @@ def login():
 # We could use views for the enpoints that dont take in any form of input or for very commonly used joins
 
 
-@app.route('/Insert_______', methods=["POST"])
-def Insert____________():
-    ##insert template
+# @app.route('/Insert_______', methods=["POST"])
+# def Insert____________():
+#     ##insert template
 
 
-@app.route('/Delete_______', methods=["DELETE"])
-def Delete___________():
-    ##Delete template
+# @app.route('/Delete_______', methods=["DELETE"])
+# def Delete___________():
+#     ##Delete template
 
 
-@app.route('/Update__________', methods=["PUT"])
-def Update____________():
-    ##Update template
+# @app.route('/Update__________', methods=["PUT"])
+# def Update____________():
+#     ##Update template
 
 # 1
 # Input: None 
