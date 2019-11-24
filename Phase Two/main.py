@@ -47,7 +47,7 @@ def main():
     # except Exception as e:
     #     return "it broke " + str(e)
 
-#Login Route
+# Login Route
 # This can be fairly simple, although we should not store the plain text passwords since she wants security
 # We also need to figure out how to give permissions to certain users
 @app.route('/login', methods=["GET"])
@@ -57,7 +57,6 @@ def login():
     password = args["password"]
     query = 'Select type from Users where username = \'' + userName + '\' and password = encode( \'' + password + '\', \'encryptKey\')'
 
-    print(query)
     try:
         with db.connect() as conn:
             result = conn.execute(query).fetchall()
@@ -69,7 +68,7 @@ def login():
 
 
 #We need to have an update, delete, and insert for each 'major' table i.e vehicle, mobile computer, keyboards, dock, etc... There are 9 major tables, so 27 endpoints
-# We could use stored procedures for this so that it is possible to keep the linking tables updated with the new data. 
+# We could use stored procedures for this so that it is possible to keep the linking tables updated with the new data.
 # We could use triggers in place of the check() constraint to make sure tha data is valid
 # We could use views for the enpoints that dont take in any form of input or for very commonly used joins
 
@@ -88,6 +87,18 @@ def login():
 # def Update____________():
 #     ##Update template
 
+#Insert vehicle
+#Input: unitNumber, make, model, lastModifyDate
+# Output: none
+app.route('/AddVehicle', methods=['POST'])
+def AddVehicle():
+    ##get the parameters
+
+    query = 'call AddVehicle(params go here)'
+    conn.execute(query)
+
+
+## 20 QUERIES
 # 1
 # Input: None 
 # Output: unitNumber, lastVideoUploadDate
