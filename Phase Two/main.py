@@ -1,6 +1,6 @@
 # [START imports]
 from flask import Flask, render_template, request,json
-import sqlalchemy
+import sqlalchemy 
 import os
 import pandas as pd
 
@@ -87,15 +87,6 @@ def login():
 # def Update____________():
 #     ##Update template
 
-#Insert vehicle
-#Input: unitNumber, make, model, lastModifyDate
-# Output: none
-app.route('/AddVehicle', methods=['POST'])
-def AddVehicle():
-    ##get the parameters
-
-    query = 'call AddVehicle(params go here)'
-    conn.execute(query)
 
 
 ## 20 QUERIES
@@ -505,17 +496,77 @@ def backcamera():
 
     return render_template("backcamera.html")
 
-@app.route('/deleteVehicle/<unitNumber>', methods=["POST"])
-def deleteVehicle():
+##It took me hours to realize this.
+#You MUST explicitly commit your transaction when trying to call a stored procedure or really doing anything other than selecting
+# Do not make the same mistakes that I have 
+# BTW all you need to do is wrap your .execute in trans = conn.begin() and then after, trans.commit()
+@app.route('/deleteVehicle/<unitNumber>', methods=["DELETE"])
+def deleteVehicle(unitNumber):
     try:
         with db.connect() as conn:
-            query = 'call deleteVehicle(\'' + unitNumber + '\')'
-            result = conn.execute(query).fetchall()
-            return json.dumps([dict(r) for r in result])
+            trans = conn.begin()
+            query = 'CALL deleteVehicle(' + unitNumber + ')'
+            result = conn.execute(query)
+            trans.commit()
+            returnString = "Vehicle " + unitNumber + " has been deleted"
+            return returnString
+
     except Exception as e:
         return "it brokedead " + str(e)
 
-        
+#Insert vehicle
+#Input: unitNumber, make, model, lastModifyDate, badBoysCaught
+# Output: none
+@app.route('/InsertVehicle', methods=['POST'])
+def InsertVehicle():
+    ##get the parameters
+    with db.connect() as conn:
+        try: 
+            args = request.form
+            unitNumber = args.get("unitNumber")
+            make = args.get("make")
+            model = args.get("model")
+            lastModifyDate = args.get("lastModifyDate")
+            badBoysCaught = args.get("badBoysCaught")
+            trans = conn.begin()
+            query = 'call AddVehicle( ' + unitNumber  + ', \'' + make + '\', \'' + model + '\',\'' + lastModifyDate +  '\',' + badBoysCaught + ')'
+            conn.execute(query)
+            trans.commit()
+            return "Vehicle added"
+        except Exception as e:
+            return "it broke " + str(e)
+
+
+@app.route('/UpdateVehicle', methods=["PUT"])
+def UpdateVehicle():
+    with db.connect() as conn:
+        try:
+            args = request.form
+            unitNumber = args.get("unitNumber")
+            if unitNumber is None:
+                return "unitNumber cannot be null"
+            make = args.get("make")
+            model = args.get("model")
+            lastModifyDate = args.get("lastModifyDate")
+            badBoysCaught = args.get("badBoysCaught")
+            trans = conn.begin()
+            if make is not None: 
+                query = 'update Vehicle set make = \'' + make + '\' where unitNumber = ' + unitNumber
+                conn.execute(query)
+            if model is not None:
+                query = 'update Vehicle set model = \'' + model + '\' where unitNumber = ' + unitNumber
+                conn.execute(query)
+            if lastModifyDate is not None:
+                query = 'call UpdateModifyDate( ' + unitNumber + ' , \'' + lastModifyDate + '\')'
+                conn.execute(query)
+            if badBoysCaught is not None:
+                query = 'update Vehicle set badBoysCaught = \'' + badBoysCaught + '\' where unitNumber = ' + unitNumber
+                conn.execute(query)
+            trans.commit()
+            return "Vehicle Updated"
+
+        except Exception as e:
+            return "It broke " + str(e)        
 
 if __name__=='__main__':
     app.run(debug=True)
