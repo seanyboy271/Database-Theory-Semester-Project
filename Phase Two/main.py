@@ -536,7 +536,9 @@ def InsertVehicle():
         except Exception as e:
             return "it broke " + str(e)
 
-
+#Update Vehicle
+# Input: Unit number along with any vehicle attribute you want to update
+# Output: None
 @app.route('/UpdateVehicle', methods=["PUT"])
 def UpdateVehicle():
     with db.connect() as conn:
@@ -557,6 +559,7 @@ def UpdateVehicle():
                 query = 'update Vehicle set model = \'' + model + '\' where unitNumber = ' + unitNumber
                 conn.execute(query)
             if lastModifyDate is not None:
+                #This is a stored procedure since we need to convert the lastModify date string into a datetime object before the update
                 query = 'call UpdateModifyDate( ' + unitNumber + ' , \'' + lastModifyDate + '\')'
                 conn.execute(query)
             if badBoysCaught is not None:
