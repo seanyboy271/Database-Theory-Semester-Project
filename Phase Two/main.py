@@ -97,7 +97,7 @@ def login():
 def VehicleWithRecentlyUploaded():
     try:
         with db.connect() as conn:
-            query = 'SELECT V.unitNumber, Arb.lastVideoUpdate FROM Vehicle V JOIN VehicleArbitratorSystem VAS ON V.unitNumber = VAS.unitNumber JOIN ArbitratorSystem Arb ON VAS.ID = Arb.ID ORDER BY lastVideoUpdate DESC;'
+            query = 'Select * from VehicleWithRecentlyUploadedView'
             result = conn.execute(query).fetchall()
             return json.dumps([dict(r) for r in result])
 
