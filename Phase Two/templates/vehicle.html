@@ -13,12 +13,12 @@
     </ol>
 
     <!-- Page Content -->
-    <h1>{{ unitNum }} <span data-bind="text: ' - ' + vehicle()[0].Make + ' ' + vehicle()[0].model"></span></h1>
-    <small class="updated-time" data-bind="text: 'Last updated: ' + vehicle()[0].lastModifyDate"></small>
+    <h1>{{ unitNum }} <span data-bind="text: ' - ' + vehicle().Make + ' ' + vehicle().model"></span></h1>
+    <small class="updated-time" data-bind="text: 'Last updated: ' + vehicle().lastModifyDate"></small>
     <hr>
-    <div data-bind="with: vehicle()[0]">
-        <div class="row float-left">
-            <div class="col">
+    <div data-bind="with: vehicle()">
+        <div class="row">
+            <div class="col" align="center">
                 <div class="card text-white bg-danger o-hidden h-100" style="width: 145px;">
                     <div class="card-body">
                         <h1 class="text-center" data-bind="text: badBoysCaught">Vehicles</h1>
@@ -27,6 +27,18 @@
                 </div>
             </div>
         </div>
+    </div>
+    <br/>
+
+    <div>
+        <table class="info-table" style="width: 30%; margin-left: 30px;">
+            <tbody>
+            <tr>
+                <td>Cable Color</td>
+                <td><span data-bind="text: cableColor"></span></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 
 

@@ -1,3 +1,19 @@
 .updated-time {
     color: #777777;
 }
+
+td:first-child {
+    font-weight: bold;
+}
+
+td {
+    padding: 16px;
+}
+
+tr:first-child {
+    border-top: 1px solid #dddddd;
+}
+
+tr {
+    border-bottom: 1px solid #dddddd;
+}
