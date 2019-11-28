@@ -437,10 +437,23 @@ def ArbitratorWithBadStatusCodes():
 
 
 
-@app.route('/vehicle', methods=["GET"])
+@app.route('/vehicles', methods=["GET"])
 def vehicles():
 
-    return render_template("vehicle.html")
+    return render_template("vehicles.html")
+
+@app.route('/vehicle/<id>', methods=["GET"])
+def vehicle_id(id):
+    try:
+        with db.connect() as conn:
+            query = 'select * from Vehicle where unitNumber = \"' + id + '\"'
+            result = conn.execute(query).fetchall()
+            res = json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        res = ""
+
+    return render_template("vehicle.html", unitNum=id, data=res)
 
 
 @app.route('/vehicle/all', methods=["GET"])
