@@ -314,7 +314,7 @@ def CradlePointCardNumber():
 
     try:
         with db.connect() as conn:
-            query = 'Select serialNumber from MobileComputer where PCName = \'' + PCName + '\''
+            query = 'select VC.cardNumber from CradlePoint join VehicleCradlepoint VC on CradlePoint.cardNumber = VC.cardNumber join Vehicle V on VC.unitNumber = V.unitNumber where V.unitNumber =\'' + unitNumber + '\''
             result = conn.execute(query).fetchall()
             return json.dumps([dict(r) for r in result])
 
