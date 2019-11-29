@@ -7,3 +7,9 @@
     
 Be sure that you have Google Cloud SDK installed and initialized.
 Be sure that you have Python version 3.7 (may work with other Python versions as well)
+
+### Dependencies
+These dependencies must be installed to run the demonstration:
+  1.  pip install Flask
+  2.  pip install pymysql
+  3.  pip install sqlalchemy
