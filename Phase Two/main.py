@@ -436,7 +436,7 @@ def ArbitratorWithBadStatusCodes():
         return "it broke " + str(e)
 
 
-
+# Vehicles
 @app.route('/vehicles', methods=["GET"])
 def vehicles():
 
@@ -468,10 +468,35 @@ def vehicles_all():
         return "it broke " + str(e)
 
 
-@app.route('/mobilecomputer', methods=["GET"])
+# Mobile Computers
+@app.route('/mobilecomputers', methods=["GET"])
 def mobilecomputer():
 
-    return render_template("mobilecomputer.html")
+    return render_template("mobilecomputers.html")
+
+@app.route('/mobilecomputer/<serialNumber>', methods=["GET"])
+def mobilecomputer_id(serialNumber):
+    try:
+        with db.connect() as conn:
+            query = 'select * from MobileComputer where serialNumber = \"' + serialNumber + '\"'
+            result = conn.execute(query).fetchall()
+            res = json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        res = ""
+
+    return render_template("mobilecomputer.html", unitNum=id, data=res)
+
+@app.route('/mobilecomputer/all', methods=["GET"])
+def mobilecomputer_all():
+    try:
+        with db.connect() as conn:
+            query = 'select * from MobileComputer'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
 
 @app.route('/mobilecomputerdock', methods=["GET"])
 def mobilecomputerdock():
