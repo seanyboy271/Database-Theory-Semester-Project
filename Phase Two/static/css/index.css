@@ -8,6 +8,8 @@ td:first-child {
 
 td {
     padding: 16px;
+    width: 300px;
+    text-align: center;
 }
 
 tr:first-child {

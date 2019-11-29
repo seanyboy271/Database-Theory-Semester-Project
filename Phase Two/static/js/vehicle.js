@@ -9,7 +9,12 @@ function VehicleDetailViewModel(res) {
             dataType: "json",
             url: '/CradlepointCableColor?unitNumber=' + self.vehicle().unitNumber,
             success: function (data, textStatus, XmlHttpRequest) {
-                self.cableColor(data[0].cableColor);
+                if (data.length > 0 && 'cableColor' in data[0]) {
+                    self.cableColor(data[0].cableColor);
+                } else {
+                    self.cableColor("N/A");
+                }
+
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert(errorThrown);
