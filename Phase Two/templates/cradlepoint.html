@@ -1,16 +1,36 @@
-{%  extends 'base.html' %}
+{% extends 'base.html' %}
 {% block content %}
 
-<!-- Breadcrumbs-->
-<ol class="breadcrumb">
-  <li class="breadcrumb-item">
-    <a href="/">Inventory</a>
-  </li>
-  <li class="breadcrumb-item active">Cradlepoints</li>
-</ol>
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/">Inventory</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="/cradlepoints">CradlePoints</a>
+        </li>
+        <li class="breadcrumb-item active"><span data-bind="text: cradlepoint().cardNumber"></span></li>
+    </ol>
 
-<!-- Page Content -->
-<h1>Cradlepoints</h1>
-<hr>
+    <!-- Page Content -->
+    <h1><span data-bind="text: cradlepoint().cardNumber"></span></h1>
+    <hr>
+    <div>
+        <table class="info-table" data-bind="with: cradlepoint">
+            <tbody>
+             <tr>
+                <td>Cable Color</td>
+                <td><span data-bind="text: cableColor"></span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
+{% endblock %}
+
+{% block scripts %}
+    <script src="/static/js/cradlepoint.js"></script>
+    <script>
+        ko.applyBindings(new CradlepointDetailViewModel({{ data|tojson|safe }}));
+    </script>
 {% endblock %}

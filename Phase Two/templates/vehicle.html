@@ -6,27 +6,55 @@
         <li class="breadcrumb-item">
             <a href="/">Inventory</a>
         </li>
-        <li class="breadcrumb-item active">Vehicles</li>
+        <li class="breadcrumb-item">
+            <a href="/vehicles">Vehicles</a>
+        </li>
+        <li class="breadcrumb-item active">{{ unitNum }}</li>
     </ol>
 
     <!-- Page Content -->
-    <h1>Vehicles</h1>
+    <h1>{{ unitNum }} <span data-bind="text: ' - ' + vehicle().Make + ' ' + vehicle().model"></span></h1>
+    <small class="updated-time" data-bind="text: 'Last updated: ' + vehicle().lastModifyDate"></small>
     <hr>
-    <div class="row" data-bind="foreach: vehicles">
-        <div class="col-xl-3 col-sm-6 mb-3" style="padding: 8px;">
-            <div class="card">
-                <div class="card-body">
-                    <h2 data-bind="text: unitNumber"></h2>
-                    <span data-bind="text: Make"></span> <span data-bind="text: model"></span><br/>
-                    Bad Boys Caught: <span data-bind="text: badBoysCaught"></span><br/>
-                    Last Modified: <span data-bind="text: lastModifyDate"></span>
+    <div data-bind="with: vehicle()">
+        <div class="row">
+            <div class="col" align="center">
+                <div class="card text-white bg-danger o-hidden h-100" style="width: 145px;">
+                    <div class="card-body">
+                        <h1 class="text-center" data-bind="text: badBoysCaught">Vehicles</h1>
+                        <small class="">Bad Boys Caught</small>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <br/>
+
+    <div>
+        <table class="info-table">
+            <tbody>
+             <tr>
+                <td>PC Name</td>
+                <td><span data-bind="text: pcName"></span></td>
+            </tr>
+            <tr>
+                <td>Cradlepoint Card Number</td>
+                <td><span data-bind="text: cradlepointCardNumber"></span></td>
+            </tr>
+             <tr>
+                <td>Cradlepoint Cable Color</td>
+                <td><span data-bind="text: cableColor"></span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
 
 {% endblock %}
 
 {% block scripts %}
-    <script src="static/js/vehicles.js"></script>
+    <script src="/static/js/vehicle.js"></script>
+    <script>
+        ko.applyBindings(new VehicleDetailViewModel({{ data|tojson|safe }}));
+    </script>
 {% endblock %}

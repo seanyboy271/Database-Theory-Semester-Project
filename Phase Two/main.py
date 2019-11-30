@@ -314,7 +314,7 @@ def CradlePointCardNumber():
 
     try:
         with db.connect() as conn:
-            query = 'Select serialNumber from MobileComputer where PCName = \'' + PCName + '\''
+            query = 'select VC.cardNumber from CradlePoint join VehicleCradlepoint VC on CradlePoint.cardNumber = VC.cardNumber join Vehicle V on VC.unitNumber = V.unitNumber where V.unitNumber =\'' + unitNumber + '\''
             result = conn.execute(query).fetchall()
             return json.dumps([dict(r) for r in result])
 
@@ -436,11 +436,24 @@ def ArbitratorWithBadStatusCodes():
         return "it broke " + str(e)
 
 
-
-@app.route('/vehicle', methods=["GET"])
+# Vehicles
+@app.route('/vehicles', methods=["GET"])
 def vehicles():
 
-    return render_template("vehicle.html")
+    return render_template("vehicles.html")
+
+@app.route('/vehicle/<id>', methods=["GET"])
+def vehicle_id(id):
+    try:
+        with db.connect() as conn:
+            query = 'select * from Vehicle where unitNumber = \"' + id + '\"'
+            result = conn.execute(query).fetchall()
+            res = json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        res = ""
+
+    return render_template("vehicle.html", unitNum=id, data=res)
 
 
 @app.route('/vehicle/all', methods=["GET"])
@@ -455,46 +468,226 @@ def vehicles_all():
         return "it broke " + str(e)
 
 
-@app.route('/mobilecomputer', methods=["GET"])
+# Mobile Computers
+@app.route('/mobilecomputers', methods=["GET"])
 def mobilecomputer():
 
-    return render_template("mobilecomputer.html")
+    return render_template("mobilecomputers.html")
 
-@app.route('/mobilecomputerdock', methods=["GET"])
+@app.route('/mobilecomputer/<serialNumber>', methods=["GET"])
+def mobilecomputer_id(serialNumber):
+    try:
+        with db.connect() as conn:
+            query = 'select * from MobileComputer where serialNumber = \"' + serialNumber + '\"'
+            result = conn.execute(query).fetchall()
+            res = json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        res = ""
+
+    return render_template("mobilecomputer.html", unitNum=id, data=res)
+
+@app.route('/mobilecomputer/all', methods=["GET"])
+def mobilecomputer_all():
+    try:
+        with db.connect() as conn:
+            query = 'select * from MobileComputer'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
+
+@app.route('/mobilecomputerdocks', methods=["GET"])
 def mobilecomputerdock():
 
-    return render_template("mobilecomputerdock.html")
+    return render_template("mobilecomputerdocks.html")
 
-@app.route('/arbitrator', methods=["GET"])
+@app.route('/mobilecomputerdock/<serialNumber>', methods=["GET"])
+def mobilecomputerdock_id(serialNumber):
+    try:
+        with db.connect() as conn:
+            query = 'select * from Dock where SerialNumber = \"' + serialNumber + '\"'
+            result = conn.execute(query).fetchall()
+            res = json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        res = ""
+
+    return render_template("mobilecomputerdock.html", unitNum=id, data=res)
+
+@app.route('/mobilecomputerdock/all', methods=["GET"])
+def mobilecomputerdock_all():
+    try:
+        with db.connect() as conn:
+            query = 'select * from Dock'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
+
+@app.route('/arbitrators', methods=["GET"])
 def arbitrator():
 
-    return render_template("arbitrator.html")
+    return render_template("arbitrators.html")
 
+@app.route('/arbitrator/<id>', methods=["GET"])
+def arbitrator_id(id):
+    try:
+        with db.connect() as conn:
+            query = 'select * from ArbitratorSystem where id = \"' + id + '\"'
+            result = conn.execute(query).fetchall()
+            res = json.dumps([dict(r) for r in result])
 
-@app.route('/cradlepoint', methods=["GET"])
+    except Exception as e:
+        res = ""
+
+    return render_template("arbitrator.html", unitNum=id, data=res)
+
+@app.route('/arbitrator/all', methods=["GET"])
+def arbitrator_all():
+    try:
+        with db.connect() as conn:
+            query = 'select * from ArbitratorSystem'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
+
+# Cradlepoint
+@app.route('/cradlepoints', methods=["GET"])
 def cradlepoint():
 
-    return render_template("cradlepoint.html")
+    return render_template("cradlepoints.html")
 
-@app.route('/keyboard', methods=["GET"])
+@app.route('/cradlepoint/<cardNumber>', methods=["GET"])
+def cradlepoint_id(cardNumber):
+    try:
+        with db.connect() as conn:
+            query = 'select * from CradlePoint where cardNumber = \"' + cardNumber + '\"'
+            result = conn.execute(query).fetchall()
+            res = json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        res = ""
+
+    return render_template("cradlepoint.html", unitNum=id, data=res)
+
+@app.route('/cradlepoint/all', methods=["GET"])
+def cradlepoint_all():
+    try:
+        with db.connect() as conn:
+            query = 'select * from CradlePoint'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
+
+
+# Keyboard
+@app.route('/keyboards', methods=["GET"])
 def keyboard():
 
-    return render_template("keyboard.html")
+    return render_template("keyboards.html")
 
-@app.route('/softwarestatus', methods=["GET"])
-def softwarestatus():
+@app.route('/keyboard/<serialNumber>', methods=["GET"])
+def keyboard_id(serialNumber):
+    try:
+        with db.connect() as conn:
+            query = 'select * from Keyboard where serialNumber = \"' + serialNumber + '\"'
+            result = conn.execute(query).fetchall()
+            res = json.dumps([dict(r) for r in result])
 
-    return render_template("softwarestatus.html")
+    except Exception as e:
+        res = ""
 
-@app.route('/frontcamera', methods=["GET"])
+    return render_template("keyboard.html", unitNum=id, data=res)
+
+@app.route('/keyboard/all', methods=["GET"])
+def keyboard_all():
+    try:
+        with db.connect() as conn:
+            query = 'select * from Keyboard'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
+
+@app.route('/softwarestatus/<serialNumber>', methods=["GET"])
+def softwarestatus(serialNumber):
+    try:
+        with db.connect() as conn:
+            query = 'select * from ComputerSoftwareStatus where serialNumber = \"' + serialNumber + '\"'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
+
+# Front Camera
+@app.route('/frontcameras', methods=["GET"])
 def frontcamera():
 
-    return render_template("frontcamera.html")
+    return render_template("frontcameras.html")
 
-@app.route('/backcamera', methods=["GET"])
-def backcamera():
+@app.route('/frontcamera/<cameraID>', methods=["GET"])
+def frontcamera_id(cameraID):
+    try:
+        with db.connect() as conn:
+            query = 'select * from FrontCamera where cameraID = \"' + cameraID + '\"'
+            result = conn.execute(query).fetchall()
+            res = json.dumps([dict(r) for r in result])
 
-    return render_template("backcamera.html")
+    except Exception as e:
+        res = ""
+
+    return render_template("frontcamera.html", unitNum=id, data=res)
+
+@app.route('/frontcamera/all', methods=["GET"])
+def frontcamera_all():
+    try:
+        with db.connect() as conn:
+            query = 'select * from FrontCamera'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
+
+# Rear Camera
+@app.route('/rearcameras', methods=["GET"])
+def rearcamera():
+
+    return render_template("rearcameras.html")
+
+@app.route('/rearcamera/<cameraID>', methods=["GET"])
+def rearcamera_id(cameraID):
+    try:
+        with db.connect() as conn:
+            query = 'select * from RearCamera where cameraID = \"' + cameraID + '\"'
+            result = conn.execute(query).fetchall()
+            res = json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        res = ""
+
+    return render_template("rearcamera.html", unitNum=id, data=res)
+
+@app.route('/rearcamera/all', methods=["GET"])
+def rearcamera_all():
+    try:
+        with db.connect() as conn:
+            query = 'select * from RearCamera'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
+
 
 ##It took me hours to realize this.
 #You MUST explicitly commit your transaction when trying to call a stored procedure or really doing anything other than selecting

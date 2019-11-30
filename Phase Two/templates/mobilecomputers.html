@@ -1,0 +1,36 @@
+{%  extends 'base.html' %}
+{% block content %}
+
+<!-- Breadcrumbs-->
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <a href="/">Inventory</a>
+  </li>
+  <li class="breadcrumb-item active">Mobile Computers</li>
+</ol>
+
+    <!-- Page Content -->
+    <h1>Mobile Computers</h1>
+    <hr>
+    <div class="row" data-bind="foreach: computers">
+        <div class="col-xl-3 col-sm-6 mb-3" style="padding: 8px;">
+            <div class="card">
+                <div class="card-body">
+                    <h3 data-bind="text: PCName "></h3>
+                    <span data-bind="text: type"></span>
+                </div>
+                <a class="card-footer clearfix z-1" data-bind="attr: { href: '/mobilecomputer/' + serialNumber }">
+                    <span class="float-left">View</span>
+                    <span class="float-right">
+                  <i class="fas fa-angle-right"></i>
+                </span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="/static/js/mobilecomputers.js"></script>
+{% endblock %}

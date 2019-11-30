@@ -1,16 +1,36 @@
-{%  extends 'base.html' %}
+{% extends 'base.html' %}
 {% block content %}
 
-<!-- Breadcrumbs-->
-<ol class="breadcrumb">
-  <li class="breadcrumb-item">
-    <a href="/">Inventory</a>
-  </li>
-  <li class="breadcrumb-item active">Mobile Computer Docks</li>
-</ol>
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/">Inventory</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="/mobilecomputerdocks">Mobile Computer Docks</a>
+        </li>
+        <li class="breadcrumb-item active"><span data-bind="text: dock().SerialNumber"></span></li>
+    </ol>
 
-<!-- Page Content -->
-<h1>Mobile Computer Docks</h1>
-<hr>
+    <!-- Page Content -->
+    <h1><span data-bind="text: dock().SerialNumber"></span></h1>
+    <hr>
+    <div>
+        <table class="info-table" data-bind="with: dock">
+            <tbody>
+             <tr>
+                <td>Stand Type</td>
+                <td><span data-bind="text: standType"></span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
+{% endblock %}
+
+{% block scripts %}
+    <script src="/static/js/mobilecomputerdock.js"></script>
+    <script>
+        ko.applyBindings(new MobileComputerDockDetailViewModel({{ data|tojson|safe }}));
+    </script>
 {% endblock %}

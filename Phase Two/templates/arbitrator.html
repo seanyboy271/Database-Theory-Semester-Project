@@ -1,16 +1,41 @@
-{%  extends 'base.html' %}
+{% extends 'base.html' %}
 {% block content %}
 
-<!-- Breadcrumbs-->
-<ol class="breadcrumb">
-  <li class="breadcrumb-item">
-    <a href="/">Inventory</a>
-  </li>
-  <li class="breadcrumb-item active">Arbitrator Systems</li>
-</ol>
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/">Inventory</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="/arbitrators">Arbitrators</a>
+        </li>
+        <li class="breadcrumb-item active"><span data-bind="text: arbitrator().ID"></span></li>
+    </ol>
 
-<!-- Page Content -->
-<h1>Arbitrator Systems</h1>
-<hr>
+    <!-- Page Content -->
+    <h1><span data-bind="text: arbitrator().ID"></span></h1>
+    <small class="updated-time" data-bind="text: 'Last updated: ' + arbitrator().lastVideoUpdate"></small>
+    <hr>
+    <div>
+        <table class="info-table" data-bind="with: arbitrator">
+            <tbody>
+             <tr>
+                <td>Has Front Camera</td>
+                <td><span data-bind="text: hasFrontCamera"></span></td>
+            </tr>
+             <tr>
+                <td>Has Rear Camera</td>
+                <td><span data-bind="text: hasRearCamera"></span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
+{% endblock %}
+
+{% block scripts %}
+    <script src="/static/js/arbitrator.js"></script>
+    <script>
+        ko.applyBindings(new ArbitratorDetailViewModel({{ data|tojson|safe }}));
+    </script>
 {% endblock %}

@@ -1,16 +1,72 @@
-{%  extends 'base.html' %}
+{% extends 'base.html' %}
 {% block content %}
 
-<!-- Breadcrumbs-->
-<ol class="breadcrumb">
-  <li class="breadcrumb-item">
-    <a href="/">Inventory</a>
-  </li>
-  <li class="breadcrumb-item active">Mobile Computers</li>
-</ol>
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/">Inventory</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="/mobilecomputers">Mobile Computers</a>
+        </li>
+        <li class="breadcrumb-item active"><span data-bind="text: computer().PCName"></span></li>
+    </ol>
 
-<!-- Page Content -->
-<h1>Mobile Computers</h1>
-<hr>
+    <!-- Page Content -->
+    <h1><span data-bind="text: computer().PCName"></span></h1>
+    <hr>
+    <div>
+        <table class="info-table" data-bind="with: computer">
+            <tbody>
+             <tr>
+                <td>GPS Com Port</td>
+                <td><span data-bind="text: gpsComPort"></span></td>
+            </tr>
+             <tr>
+                <td>BitLocker Key</td>
+                <td><span data-bind="text: bitLockerKey"></span></td>
+            </tr>
+             <tr>
+                <td>Model</td>
+                <td><span data-bind="text: model"></span></td>
+            </tr>
+             <tr>
+                <td>Serial Number</td>
+                <td><span data-bind="text: serialNumber"></span></td>
+            </tr>
+             <tr>
+                <td>Service Tag</td>
+                <td><span data-bind="text: serviceTag"></span></td>
+            </tr>
+             <tr>
+                <td>Type</td>
+                <td><span data-bind="text: type"></span></td>
+            </tr>
+             <tr>
+                <td>In Use</td>
+                <td><span data-bind="text: inUse"></span></td>
+            </tr>
+            <tr>
+                <td>Windows Version</td>
+                <td><span data-bind="text: $root.WindowsVersion"></span></td>
+            </tr>
+             <tr>
+                <td>GPS Update Last Run</td>
+                <td><span data-bind="text: $root.GpsUpdateLastRun"></span></td>
+            </tr>
+             <tr>
+                <td>Arbitrator Version</td>
+                <td><span data-bind="text: $root.ArbitratorVersion"></span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
+{% endblock %}
+
+{% block scripts %}
+    <script src="/static/js/mobilecomputer.js"></script>
+    <script>
+        ko.applyBindings(new MobileComputerDetailViewModel({{ data|tojson|safe }}));
+    </script>
 {% endblock %}

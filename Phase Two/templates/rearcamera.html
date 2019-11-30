@@ -7,7 +7,7 @@
             <a href="/">Inventory</a>
         </li>
         <li class="breadcrumb-item">
-            <a href="/frontcameras">Front Cameras</a>
+            <a href="/rearcameras">Rear Cameras</a>
         </li>
         <li class="breadcrumb-item active"><span data-bind="text: camera().cameraID"></span></li>
     </ol>
@@ -29,7 +29,7 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="/static/js/frontcamera.js"></script>
+    <script src="/static/js/rearcamera.js"></script>
     <script>
         ko.applyBindings(new DetailViewModel({{ data|tojson|safe }}));
     </script>
