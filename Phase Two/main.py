@@ -1,10 +1,10 @@
 # [START imports]
 from flask import Flask, render_template, request,json
+from flask_login import LoginManager
 import sqlalchemy 
 import os
 import pandas as pd
-
-
+ 
 
 db_user = os.environ.get("DB_USER")
 db_pass = os.environ.get("DB_PASS")
@@ -31,6 +31,9 @@ db = sqlalchemy.create_engine("mysql+pymysql://root:password@/508ProjectDatabase
 #         }
 #     )
 # )
+
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 
 ## We should have a route for each query
@@ -453,7 +456,6 @@ def ArbitratorWithBadStatusCodes():
 
     except Exception as e:
         return "it broke " + str(e)
-
 
 # Vehicles
 @app.route('/vehicles', methods=["GET"])
