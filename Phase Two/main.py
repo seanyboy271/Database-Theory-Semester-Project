@@ -498,10 +498,34 @@ def mobilecomputer_all():
     except Exception as e:
         return "it broke " + str(e)
 
-@app.route('/mobilecomputerdock', methods=["GET"])
+@app.route('/mobilecomputerdocks', methods=["GET"])
 def mobilecomputerdock():
 
-    return render_template("mobilecomputerdock.html")
+    return render_template("mobilecomputerdocks.html")
+
+@app.route('/mobilecomputerdock/<serialNumber>', methods=["GET"])
+def mobilecomputerdock_id(serialNumber):
+    try:
+        with db.connect() as conn:
+            query = 'select * from Dock where SerialNumber = \"' + serialNumber + '\"'
+            result = conn.execute(query).fetchall()
+            res = json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        res = ""
+
+    return render_template("mobilecomputerdock.html", unitNum=id, data=res)
+
+@app.route('/mobilecomputerdock/all', methods=["GET"])
+def mobilecomputerdock_all():
+    try:
+        with db.connect() as conn:
+            query = 'select * from Dock'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
 
 @app.route('/arbitrator', methods=["GET"])
 def arbitrator():
