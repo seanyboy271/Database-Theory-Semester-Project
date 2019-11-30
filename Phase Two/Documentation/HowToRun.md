@@ -13,3 +13,4 @@ These dependencies must be installed to run the demonstration:
   1.  pip install Flask
   2.  pip install pymysql
   3.  pip install sqlalchemy
+  4.  Pip install flask-login

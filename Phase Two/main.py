@@ -1,10 +1,10 @@
 # [START imports]
 from flask import Flask, render_template, request,json
+from flask_login import LoginManager
 import sqlalchemy 
 import os
 import pandas as pd
-
-
+ 
 
 db_user = os.environ.get("DB_USER")
 db_pass = os.environ.get("DB_PASS")
@@ -32,6 +32,9 @@ db = sqlalchemy.create_engine("mysql+pymysql://root:password@/508ProjectDatabase
 #     )
 # )
 
+login_manager = LoginManager()
+login_manager.init_app(app)
+
 
 ## We should have a route for each query
 @app.route('/', methods=["GET"])
@@ -47,23 +50,42 @@ def main():
     # except Exception as e:
     #     return "it broke " + str(e)
 
-# Login Route
-# This can be fairly simple, although we should not store the plain text passwords since she wants security
-# We also need to figure out how to give permissions to certain users
+# # Login Route
+# # This can be fairly simple, although we should not store the plain text passwords since she wants security
+# # We also need to figure out how to give permissions to certain users
+# @app.route('/login', methods=["POST"])
+# def login():
+#     args = request.args
+#     userName = args["username"]
+#     password = args["password"]
+#     query = 'Select type from Users where username = \'' + userName + '\' and password = encode( \'' + password + '\', \'encryptKey\')'
+#
+#     try:
+#         with db.connect() as conn:
+#             result = conn.execute(query).fetchall()
+#             return json.dumps([dict(r) for r in result])
+#
+#     except Exception as e:
+#         return "it broke " + str(e)
+
+
+# Login
 @app.route('/login', methods=["GET"])
 def login():
-    args = request.args
-    userName = args["username"]
-    password = args["password"]
-    query = 'Select type from Users where username = \'' + userName + '\' and password = encode( \'' + password + '\', \'encryptKey\')'
 
-    try:
-        with db.connect() as conn:
-            result = conn.execute(query).fetchall()
-            return json.dumps([dict(r) for r in result])
+    return render_template("login.html")
 
-    except Exception as e:
-        return "it broke " + str(e)
+# Register
+@app.route('/register', methods=["GET"])
+def register():
+
+    return render_template("register.html")
+
+# Logout
+@app.route('/logout', methods=["GET"])
+def logout():
+
+    return 'logout'
 
 
 
@@ -434,7 +456,6 @@ def ArbitratorWithBadStatusCodes():
 
     except Exception as e:
         return "it broke " + str(e)
-
 
 # Vehicles
 @app.route('/vehicles', methods=["GET"])
