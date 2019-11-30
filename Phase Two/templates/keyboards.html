@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/">Inventory</a>
+        </li>
+        <li class="breadcrumb-item active">Keyboards</li>
+    </ol>
+
+    <!-- Page Content -->
+    <h1>Keyboards</h1>
+    <hr>
+    <div class="row" data-bind="foreach: keyboards">
+        <div class="col-xl-3 col-sm-6 mb-3" style="padding: 8px;">
+            <div class="card">
+                <div class="card-body">
+                    <h3 data-bind="text: serialNumber "></h3>
+                </div>
+                <a class="card-footer clearfix z-1" data-bind="attr: { href: '/keyboard/' + serialNumber }">
+                    <span class="float-left">View</span>
+                    <span class="float-right">
+                  <i class="fas fa-angle-right"></i>
+                </span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="/static/js/keyboards.js"></script>
+{% endblock %}

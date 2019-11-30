@@ -586,10 +586,36 @@ def cradlepoint_all():
     except Exception as e:
         return "it broke " + str(e)
 
-@app.route('/keyboard', methods=["GET"])
+
+# Keyboard
+@app.route('/keyboards', methods=["GET"])
 def keyboard():
 
-    return render_template("keyboard.html")
+    return render_template("keyboards.html")
+
+@app.route('/keyboard/<serialNumber>', methods=["GET"])
+def keyboard_id(serialNumber):
+    try:
+        with db.connect() as conn:
+            query = 'select * from Keyboard where serialNumber = \"' + serialNumber + '\"'
+            result = conn.execute(query).fetchall()
+            res = json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        res = ""
+
+    return render_template("keyboard.html", unitNum=id, data=res)
+
+@app.route('/keyboard/all', methods=["GET"])
+def keyboard_all():
+    try:
+        with db.connect() as conn:
+            query = 'select * from Keyboard'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
 
 @app.route('/softwarestatus', methods=["GET"])
 def softwarestatus():

@@ -1,16 +1,44 @@
-{%  extends 'base.html' %}
+{% extends 'base.html' %}
 {% block content %}
 
-<!-- Breadcrumbs-->
-<ol class="breadcrumb">
-  <li class="breadcrumb-item">
-    <a href="/">Inventory</a>
-  </li>
-  <li class="breadcrumb-item active">Keyboards</li>
-</ol>
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/">Inventory</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="/keyboards">Keyboards</a>
+        </li>
+        <li class="breadcrumb-item active"><span data-bind="text: keyboard().serialNumber"></span></li>
+    </ol>
 
-<!-- Page Content -->
-<h1>Keyboards</h1>
-<hr>
+    <!-- Page Content -->
+    <h1><span data-bind="text: keyboard().serialNumber"></span></h1>
+    <hr>
+    <div>
+        <table class="info-table" data-bind="with: keyboard">
+            <tbody>
+             <tr>
+                <td>Type</td>
+                <td><span data-bind="text: type"></span></td>
+            </tr>
+             <tr>
+                <td>Model</td>
+                <td><span data-bind="text: model"></span></td>
+            </tr>
+             <tr>
+                <td>Is Sticky</td>
+                <td><span data-bind="text: isSticky"></span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
+{% endblock %}
+
+{% block scripts %}
+    <script src="/static/js/keyboard.js"></script>
+    <script>
+        ko.applyBindings(new KeyboardDetailViewModel({{ data|tojson|safe }}));
+    </script>
 {% endblock %}
