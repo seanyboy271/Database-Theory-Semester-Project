@@ -617,10 +617,16 @@ def keyboard_all():
     except Exception as e:
         return "it broke " + str(e)
 
-@app.route('/softwarestatus', methods=["GET"])
-def softwarestatus():
+@app.route('/softwarestatus/<serialNumber>', methods=["GET"])
+def softwarestatus(serialNumber):
+    try:
+        with db.connect() as conn:
+            query = 'select * from ComputerSoftwareStatus where serialNumber = \"' + serialNumber + '\"'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
 
-    return render_template("softwarestatus.html")
+    except Exception as e:
+        return "it broke " + str(e)
 
 @app.route('/frontcamera', methods=["GET"])
 def frontcamera():
