@@ -556,11 +556,35 @@ def arbitrator_all():
     except Exception as e:
         return "it broke " + str(e)
 
-
-@app.route('/cradlepoint', methods=["GET"])
+# Cradlepoint
+@app.route('/cradlepoints', methods=["GET"])
 def cradlepoint():
 
-    return render_template("cradlepoint.html")
+    return render_template("cradlepoints.html")
+
+@app.route('/cradlepoint/<cardNumber>', methods=["GET"])
+def cradlepoint_id(cardNumber):
+    try:
+        with db.connect() as conn:
+            query = 'select * from CradlePoint where cardNumber = \"' + cardNumber + '\"'
+            result = conn.execute(query).fetchall()
+            res = json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        res = ""
+
+    return render_template("cradlepoint.html", unitNum=id, data=res)
+
+@app.route('/cradlepoint/all', methods=["GET"])
+def cradlepoint_all():
+    try:
+        with db.connect() as conn:
+            query = 'select * from CradlePoint'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
 
 @app.route('/keyboard', methods=["GET"])
 def keyboard():
