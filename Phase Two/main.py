@@ -628,15 +628,66 @@ def softwarestatus(serialNumber):
     except Exception as e:
         return "it broke " + str(e)
 
-@app.route('/frontcamera', methods=["GET"])
+# Front Camera
+@app.route('/frontcameras', methods=["GET"])
 def frontcamera():
 
-    return render_template("frontcamera.html")
+    return render_template("frontcameras.html")
 
-@app.route('/backcamera', methods=["GET"])
-def backcamera():
+@app.route('/frontcamera/<cameraID>', methods=["GET"])
+def frontcamera_id(cameraID):
+    try:
+        with db.connect() as conn:
+            query = 'select * from FrontCamera where cameraID = \"' + cameraID + '\"'
+            result = conn.execute(query).fetchall()
+            res = json.dumps([dict(r) for r in result])
 
-    return render_template("backcamera.html")
+    except Exception as e:
+        res = ""
+
+    return render_template("frontcamera.html", unitNum=id, data=res)
+
+@app.route('/frontcamera/all', methods=["GET"])
+def frontcamera_all():
+    try:
+        with db.connect() as conn:
+            query = 'select * from FrontCamera'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
+
+# Rear Camera
+@app.route('/rearcameras', methods=["GET"])
+def rearcamera():
+
+    return render_template("rearcameras.html")
+
+@app.route('/rearcamera/<cameraID>', methods=["GET"])
+def rearcamera_id(cameraID):
+    try:
+        with db.connect() as conn:
+            query = 'select * from RearCamera where cameraID = \"' + cameraID + '\"'
+            result = conn.execute(query).fetchall()
+            res = json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        res = ""
+
+    return render_template("rearcamera.html", unitNum=id, data=res)
+
+@app.route('/rearcamera/all', methods=["GET"])
+def rearcamera_all():
+    try:
+        with db.connect() as conn:
+            query = 'select * from RearCamera'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
+
 
 ##It took me hours to realize this.
 #You MUST explicitly commit your transaction when trying to call a stored procedure or really doing anything other than selecting
