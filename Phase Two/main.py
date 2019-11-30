@@ -527,10 +527,34 @@ def mobilecomputerdock_all():
     except Exception as e:
         return "it broke " + str(e)
 
-@app.route('/arbitrator', methods=["GET"])
+@app.route('/arbitrators', methods=["GET"])
 def arbitrator():
 
-    return render_template("arbitrator.html")
+    return render_template("arbitrators.html")
+
+@app.route('/arbitrator/<id>', methods=["GET"])
+def arbitrator_id(id):
+    try:
+        with db.connect() as conn:
+            query = 'select * from ArbitratorSystem where id = \"' + id + '\"'
+            result = conn.execute(query).fetchall()
+            res = json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        res = ""
+
+    return render_template("arbitrator.html", unitNum=id, data=res)
+
+@app.route('/arbitrator/all', methods=["GET"])
+def arbitrator_all():
+    try:
+        with db.connect() as conn:
+            query = 'select * from ArbitratorSystem'
+            result = conn.execute(query).fetchall()
+            return json.dumps([dict(r) for r in result])
+
+    except Exception as e:
+        return "it broke " + str(e)
 
 
 @app.route('/cradlepoint', methods=["GET"])
