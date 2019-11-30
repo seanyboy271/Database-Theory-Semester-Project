@@ -187,7 +187,7 @@ def PCNameInVehicle():
 def NewestArbitratorVersionVehicle():
     try:
         with db.connect() as conn:
-            query = 'SELECT V.unitNumber FROM Vehicle V JOIN VehicleComputer VC ON V.unitNumber = VC.unitNumber JOIN MobileComputer MC ON VC.serialNumber = MC.serialNumber JOIN ComputerSoftwareStatus CSS ON MC.serialNumber = CSS.serialNumber WHERE CSS.ArbitratorVersion LIKE "NEW";'
+            query = 'Select * from NewestArbitratorVersionVehicleView'
             result = conn.execute(query).fetchall()
             return json.dumps([dict(r) for r in result])
 
@@ -279,7 +279,7 @@ def LatModifyDate():
 def VehcleWithOldestInpectionDate():
     try:
         with db.connect() as conn:
-            query = 'SELECT unitNumber, lastModifyDate FROM Vehicle ORDER BY lastModifyDate ASC LIMIT 1;'
+            query = 'Select * from VehcleWithOldestInpectionDateView'
             result = conn.execute(query).fetchall()
             return json.dumps([dict(r) for r in result])
 
@@ -348,7 +348,7 @@ def CradlePointCardNumber():
 def ITComputers():
     try:
         with db.connect() as conn:
-            query = 'select count(serialNumber) as "Number of Computers" from MobileComputer where PCName = \"IT\"'
+            query = 'Select * from ITComputersView'
             result = conn.execute(query).fetchall()
             return json.dumps([dict(r) for r in result])
 
@@ -399,7 +399,7 @@ def VehiclesWithDockType():
 def VehiclesWithFrontAndRearCamera():
     try:
         with db.connect() as conn:
-            query = 'select count(VAS.unitNumber) as "Number of Vehicles" from ArbitratorSystem join VehicleArbitratorSystem VAS on ArbitratorSystem.ID = VAS.ID where hasFrontCamera = TRUE and hasRearCamera = TRUE'
+            query = 'Select * from VehiclesWithFrontAndRearCameraView'
             result = conn.execute(query).fetchall()
             return json.dumps([dict(r) for r in result])
 
@@ -432,7 +432,7 @@ def BadBois():
 def VehiclesWithKeyboardAndNoComputer():
     try:
         with db.connect() as conn:
-            query = 'select * from Vehicle join VehicleKeyboard on Vehicle.unitNumber = VehicleKeyboard.unitNumber where Vehicle.unitNumber not in(select Vehicle.unitNumber from Vehicle join VehicleComputer on Vehicle.unitNumber = VehicleComputer.unitNumber)'
+            query = 'Select * from VehiclesWithKeyboardAndNoComputerView'
             result = conn.execute(query).fetchall()
             return json.dumps([dict(r) for r in result])
 
@@ -447,7 +447,7 @@ def VehiclesWithKeyboardAndNoComputer():
 def ArbitratorWithBadStatusCodes():
     try:
         with db.connect() as conn:
-            query = 'select * from ArbitratorSystem join ArbitratorSystemFrontCamera ASFC on ArbitratorSystem.ID = ASFC.ID join ArbitratorSystemRearCamera ASRC on ArbitratorSystem.ID = ASRC.ID join FrontCamera FC on ASFC.CameraID = FC.cameraID join RearCamera RC on ASRC.CameraID = RC.cameraID where FC.status = "Broken" or RC.status = "Broken"'
+            query = 'Select * from ArbitratorWithBadStatusCodesView'
             result = conn.execute(query).fetchall()
             return json.dumps([dict(r) for r in result])
 
