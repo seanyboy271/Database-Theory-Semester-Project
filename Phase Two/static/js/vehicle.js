@@ -72,8 +72,12 @@ document.getElementById('deleteButton').onclick = function (){
             type: "delete",
             url: '/deleteVehicle/' + self.vehicle().unitNumber,
             success: function (data, textStatus, XmlHttpRequest) {
-                alert("Vehicle Deleted")
-                window.location.href = "/vehicles"
+                if (data === 'You do not have permission to complete this action') {
+                    alert('You do not have permission to do this.');
+                } else {
+                    alert("Vehicle Deleted")
+                    window.location.href = "/vehicles"
+                }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert(errorThrown);
@@ -96,7 +100,10 @@ function UpdateVehicle() {
         data: formData,
         url: '/UpdateVehicle',
         success: function (data, textStatus, XmlHttpRequest) {
-            alert("Successfully updated Vehicle");
+            if (data === 'You do not have permission to complete this action')
+                alert('You do not have permission to do this.');
+            else
+                alert("Successfully updated Vehicle");
             location.reload()
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {

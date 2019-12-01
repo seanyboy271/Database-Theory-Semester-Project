@@ -40,8 +40,12 @@ function InsertVehicle() {
         data: formData,
         url: '/InsertVehicle',
         success: function (data, textStatus, XmlHttpRequest) {
-            alert("Successfully inserted Vehicle");
-            window.location.href = "/vehicle/" + unitNumber
+            if (data === 'You do not have permission to complete this action') {
+                alert('You do not have permission to do this.');
+            } else {
+                alert("Successfully inserted Vehicle");
+                window.location.href = "/vehicle/" + unitNumber
+            }
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             alert(errorThrown);

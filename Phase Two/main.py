@@ -892,6 +892,7 @@ def deleteVehicle(unitNumber):
 def InsertVehicle():
     if current_user.role != "Admin":
         return 'You do not have permission to complete this action'
+
     ##get the parameters
     with db.connect() as conn:
         try: 
@@ -923,6 +924,8 @@ def InsertVehicle():
 @app.route('/UpdateVehicle', methods=["PUT"])
 @login_required
 def UpdateVehicle():
+    if current_user.role != "Admin":
+        return 'You do not have permission to complete this action'
     with db.connect() as conn:
         try:
             args = request.form
