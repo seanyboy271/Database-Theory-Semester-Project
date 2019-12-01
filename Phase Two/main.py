@@ -60,6 +60,15 @@ def user_loader(ID):
             user.id = users[0]["ID"]
             user.username = users[0]["username"]
             user.hash = users[0]["hash"]
+
+            # get role
+            query = 'select Role from UserRole where ID = \"' + ID + '\"'
+            result = conn.execute(query).fetchall()
+            role = [dict(r) for r in result]
+
+            if len(role) > 0:
+                user.role = role[0]["Role"]
+
             return user
 
     except Exception as e:
@@ -86,6 +95,14 @@ def request_loader(request):
             user.id = users[0]["ID"]
             user.username = users[0]["username"]
             user.hash = users[0]["hash"]
+
+            # get role
+            query = 'select Role from UserRole where ID = \"' + str(users[0]["ID"]) + '\"'
+            result = conn.execute(query).fetchall()
+            role = [dict(r) for r in result]
+
+            if len(role) > 0:
+                user.role = role[0]["Role"]
 
             password = request.form['password']
             # DO NOT ever store passwords in plaintext and always compare password
