@@ -68,6 +68,8 @@ def user_loader(ID):
 
             if len(role) > 0:
                 user.role = role[0]["Role"]
+            else:
+                user.role = ""
 
             return user
 
@@ -103,6 +105,8 @@ def request_loader(request):
 
             if len(role) > 0:
                 user.role = role[0]["Role"]
+            else:
+                user.role = ""
 
             password = request.form['password']
             # DO NOT ever store passwords in plaintext and always compare password
