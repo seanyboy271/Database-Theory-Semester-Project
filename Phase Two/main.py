@@ -1,6 +1,7 @@
 # [START imports]
-from flask import Flask, render_template, request,json
-from flask_login import LoginManager
+from flask import Flask, render_template, request, json, redirect, url_for
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+import bcrypt
 import sqlalchemy 
 import os
 import pandas as pd
@@ -13,6 +14,7 @@ cloud_sql_connection_name = os.environ.get("CLOUD_SQL_CONNECTION_NAME")
 
 app = Flask(__name__)
 
+app.secret_key = 'BOOPBOOPSECReT'
 
 ##this is for testing
 db = sqlalchemy.create_engine("mysql+pymysql://root:password@/508ProjectDatabase?127.0.0.1/" + str(cloud_sql_connection_name))
@@ -32,61 +34,142 @@ db = sqlalchemy.create_engine("mysql+pymysql://root:password@/508ProjectDatabase
 #     )
 # )
 
+
+# Authentication management
 login_manager = LoginManager()
 login_manager.init_app(app)
 
 
+# User - Authenicated
+class User(UserMixin):
+    pass
+
+@login_manager.user_loader
+def user_loader(ID):
+    try:
+        with db.connect() as conn:
+            print('loader')
+            query = 'select ID, username, hash from User where ID = \"' + ID + '\"'
+            result = conn.execute(query).fetchall()
+            users = [dict(r) for r in result]
+
+            if len(users) <= 0:
+                return
+
+            user = User()
+            user.id = users[0]["ID"]
+            user.username = users[0]["username"]
+            user.hash = users[0]["hash"]
+            return user
+
+    except Exception as e:
+        print("it broke " + str(e))
+        return
+
+
+@login_manager.request_loader
+def request_loader(request):
+    try:
+        with db.connect() as conn:
+            usern = request.form['username']
+
+            query = 'Select ID, username, hash from User where username = \"' + usern + '\"'
+            result = conn.execute(query).fetchall()
+            users = [dict(r) for r in result]
+
+            print(users)
+
+            if len(users) <= 0:
+                return
+
+            user = User()
+            user.id = users[0]["ID"]
+            user.username = users[0]["username"]
+            user.hash = users[0]["hash"]
+
+            password = request.form['password']
+            # DO NOT ever store passwords in plaintext and always compare password
+            # hashes using constant-time comparison!
+            is_authed = bcrypt.checkpw(password.encode('utf8'), users[0]["hash"].encode('utf8'))
+            print('is?', is_authed)
+            if not is_authed:
+                return
+
+            return user
+
+    except Exception as e:
+        print("it broke " + str(e))
+        return
+
+
+def register_user(username, password):
+    hashed = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt()).decode('utf8')  # apparently the salt is stored IN the hash
+
+    try:
+        with db.connect() as conn:
+            query = 'insert into User(username, hash) values(\"' + username + '\", \'' + hashed + '\')'
+            print(query)
+            conn.execute(query)
+
+    except Exception as e:
+        print("it broke " + str(e))
+
+
 ## We should have a route for each query
 @app.route('/', methods=["GET"])
+@login_required
 def main():
 
     return render_template("dashboard.html")
 
-    # try: 
-    #     with db.connect() as conn:
-    #         num = conn.execute("Select * from testTable").fetchall()
-    #         return str(num)
-
-    # except Exception as e:
-    #     return "it broke " + str(e)
-
-# # Login Route
-# # This can be fairly simple, although we should not store the plain text passwords since she wants security
-# # We also need to figure out how to give permissions to certain users
-# @app.route('/login', methods=["POST"])
-# def login():
-#     args = request.args
-#     userName = args["username"]
-#     password = args["password"]
-#     query = 'Select type from Users where username = \'' + userName + '\' and password = encode( \'' + password + '\', \'encryptKey\')'
-#
-#     try:
-#         with db.connect() as conn:
-#             result = conn.execute(query).fetchall()
-#             return json.dumps([dict(r) for r in result])
-#
-#     except Exception as e:
-#         return "it broke " + str(e)
-
 
 # Login
-@app.route('/login', methods=["GET"])
+@app.route('/login', methods=["GET", "POST"])
 def login():
+    if request.method == 'GET':
+        if current_user.is_authenticated:
+            return redirect("/")
 
-    return render_template("login.html")
+        return render_template("login.html")
+
+    user = request_loader(request)
+    if user is not None:
+        print(user)
+        print(user.id)
+        print(user.username)
+        print(user.is_authenticated)
+        login_user(user)
+        return redirect('/')
+
+    return redirect("/login")
+
 
 # Register
-@app.route('/register', methods=["GET"])
+@app.route('/register', methods=["GET", "POST"])
 def register():
+    if request.method == 'GET':
+        if current_user.is_authenticated:
+            return redirect("/")
 
-    return render_template("register.html")
+        return render_template("register.html")
+
+    # create the user
+    register_user(request.form['username'], request.form['password'])
+
+    return redirect('login', code=307)
+
 
 # Logout
-@app.route('/logout', methods=["GET"])
+@app.route('/logout')
+@login_required
 def logout():
+    logout_user()
+    return redirect("/login")
 
-    return 'logout'
 
+@login_manager.unauthorized_handler
+def unauthorized_handler():
+    return redirect("/login")
 
 
 #We need to have an update, delete, and insert for each 'major' table i.e vehicle, mobile computer, keyboards, dock, etc... There are 9 major tables, so 27 endpoints
@@ -116,6 +199,7 @@ def logout():
 # Input: None 
 # Output: unitNumber, lastVideoUploadDate
 @app.route('/VehicleWithRecentlyUploaded', methods=["GET"])
+@login_required
 def VehicleWithRecentlyUploaded():
     try:
         with db.connect() as conn:
@@ -132,6 +216,7 @@ def VehicleWithRecentlyUploaded():
 # Input: gpsComPort
 # Output: unitNumber
 @app.route('/VehiclesOnComPort', methods=["GET"])
+@login_required
 def VehiclesOnComPort():
     args = request.args
     gpsComPort = args['gpsComPort']
@@ -150,6 +235,7 @@ def VehiclesOnComPort():
 # Input: unitNumber
 # Output: cableColor
 @app.route('/CradlepointCableColor', methods=["GET"])
+@login_required
 def CradlepointCableColor():
     args = request.args
     unitNumber = args['unitNumber']
@@ -169,6 +255,7 @@ def CradlepointCableColor():
 # Input: unitNumber
 # Output: PCName
 @app.route('/PCNameInVehicle', methods=["GET"])
+@login_required
 def PCNameInVehicle():
     args = request.args
     unitNumber = args['unitNumber']
@@ -187,6 +274,7 @@ def PCNameInVehicle():
 # Input: None
 # Output: unitNumber
 @app.route('/NewestArbitratorVersionVehicle', methods=["GET"])
+@login_required
 def NewestArbitratorVersionVehicle():
     try:
         with db.connect() as conn:
@@ -203,6 +291,7 @@ def NewestArbitratorVersionVehicle():
 # Input: mobileComputerSerialNumber
 # Output: computer model
 @app.route('/MobileComputerModel', methods=["GET"])
+@login_required
 def MobileComputerModel():
     args = request.args
     serialNumber = args['serialNumber']
@@ -222,6 +311,7 @@ def MobileComputerModel():
 # Input: keyboard serial number
 # Output: hasStickyKeys
 @app.route('/HasStickyKeys', methods=["GET"])
+@login_required
 def HasStickyKeys():
     args = request.args
     serialNumber = args['serialNumber']
@@ -241,6 +331,7 @@ def HasStickyKeys():
 # Input: PCName
 # Output: dock serialNumber
 @app.route('/ComputerDock', methods=["GET"])
+@login_required
 def ComputerDock():
     args = request.args
     PCName = args['PCName']
@@ -260,6 +351,7 @@ def ComputerDock():
 # Input: unitNumber
 # Output: lastModifyDate
 @app.route('/LatModifyDate', methods=["GET"])
+@login_required
 def LatModifyDate():
     args = request.args
     unitNumber = args['unitNumber']
@@ -279,6 +371,7 @@ def LatModifyDate():
 # Input: none
 # Output: unitNumber, lastModifyDate
 @app.route('/VehcleWithOldestInpectionDate', methods=["GET"])
+@login_required
 def VehcleWithOldestInpectionDate():
     try:
         with db.connect() as conn:
@@ -295,6 +388,7 @@ def VehcleWithOldestInpectionDate():
 # Input: PCName
 # Output: unitNumber
 @app.route('/VehicleWithPC', methods=["GET"])
+@login_required
 def VehicleWithPC():
     args = request.args
     PCName = args['PCName']
@@ -312,6 +406,7 @@ def VehicleWithPC():
 # Input: PCName
 # Output: serialNumber
 @app.route('/PCSerialNumber', methods=["GET"])
+@login_required
 def PCSerialNumber():
     args = request.args
     PCName = args['PCName']
@@ -330,6 +425,7 @@ def PCSerialNumber():
 # Input: unitNumber
 # Output: Cradlepoint card number
 @app.route('/CradlePointCardNumber', methods=["GET"])
+@login_required
 def CradlePointCardNumber():
     args = request.args
     unitNumber = args['unitNumber']
@@ -348,6 +444,7 @@ def CradlePointCardNumber():
 # Input: None
 # Output: Number of computers being used by IT
 @app.route('/ITComputers', methods=["GET"])
+@login_required
 def ITComputers():
     try:
         with db.connect() as conn:
@@ -362,6 +459,7 @@ def ITComputers():
 # Input: PCName
 # Output: bitlocker key
 @app.route('/BitlockerKey', methods=["GET"])
+@login_required
 def BitlockerKey():
     args = request.args
     PCName = args['PCName']
@@ -380,6 +478,7 @@ def BitlockerKey():
 # Input: dockType
 # Output: Cars with short dock stands
 @app.route('/VehiclesWithDockType', methods=["GET"])
+@login_required
 def VehiclesWithDockType():
     args = request.args
     dockType = args["dockType"]
@@ -399,6 +498,7 @@ def VehiclesWithDockType():
 # Input: None
 # Output: Number of vehicles with front and rear arbitrator systems
 @app.route('/VehiclesWithFrontAndRearCamera', methods=["GET"])
+@login_required
 def VehiclesWithFrontAndRearCamera():
     try:
         with db.connect() as conn:
@@ -414,6 +514,7 @@ def VehiclesWithFrontAndRearCamera():
 # Input: unitNumber
 # Output: Number of Bad Bois caught
 @app.route('/BadBois', methods=["GET"])
+@login_required
 def BadBois():
     args = request.args
     unitNumber = args['unitNumber']
@@ -432,6 +533,7 @@ def BadBois():
 # Input: None
 # Output: Computers that have a keyboard but no computer
 @app.route('/VehiclesWithKeyboardAndNoComputer', methods=["GET"])
+@login_required
 def VehiclesWithKeyboardAndNoComputer():
     try:
         with db.connect() as conn:
@@ -447,6 +549,7 @@ def VehiclesWithKeyboardAndNoComputer():
 # Input: None
 # Output: Arbitrator systems with bad status codes
 @app.route('/ArbitratorWithBadStatusCodes', methods=["GET"])
+@login_required
 def ArbitratorWithBadStatusCodes():
     try:
         with db.connect() as conn:
@@ -459,11 +562,13 @@ def ArbitratorWithBadStatusCodes():
 
 # Vehicles
 @app.route('/vehicles', methods=["GET"])
+@login_required
 def vehicles():
 
     return render_template("vehicles.html")
 
 @app.route('/vehicle/<id>', methods=["GET"])
+@login_required
 def vehicle_id(id):
     try:
         with db.connect() as conn:
@@ -478,6 +583,7 @@ def vehicle_id(id):
 
 
 @app.route('/vehicle/all', methods=["GET"])
+@login_required
 def vehicles_all():
     try:
         with db.connect() as conn:
@@ -491,11 +597,13 @@ def vehicles_all():
 
 # Mobile Computers
 @app.route('/mobilecomputers', methods=["GET"])
+@login_required
 def mobilecomputer():
 
     return render_template("mobilecomputers.html")
 
 @app.route('/mobilecomputer/<serialNumber>', methods=["GET"])
+@login_required
 def mobilecomputer_id(serialNumber):
     try:
         with db.connect() as conn:
@@ -509,6 +617,7 @@ def mobilecomputer_id(serialNumber):
     return render_template("mobilecomputer.html", unitNum=id, data=res)
 
 @app.route('/mobilecomputer/all', methods=["GET"])
+@login_required
 def mobilecomputer_all():
     try:
         with db.connect() as conn:
@@ -520,11 +629,13 @@ def mobilecomputer_all():
         return "it broke " + str(e)
 
 @app.route('/mobilecomputerdocks', methods=["GET"])
+@login_required
 def mobilecomputerdock():
 
     return render_template("mobilecomputerdocks.html")
 
 @app.route('/mobilecomputerdock/<serialNumber>', methods=["GET"])
+@login_required
 def mobilecomputerdock_id(serialNumber):
     try:
         with db.connect() as conn:
@@ -538,6 +649,7 @@ def mobilecomputerdock_id(serialNumber):
     return render_template("mobilecomputerdock.html", unitNum=id, data=res)
 
 @app.route('/mobilecomputerdock/all', methods=["GET"])
+@login_required
 def mobilecomputerdock_all():
     try:
         with db.connect() as conn:
@@ -549,11 +661,13 @@ def mobilecomputerdock_all():
         return "it broke " + str(e)
 
 @app.route('/arbitrators', methods=["GET"])
+@login_required
 def arbitrator():
 
     return render_template("arbitrators.html")
 
 @app.route('/arbitrator/<id>', methods=["GET"])
+@login_required
 def arbitrator_id(id):
     try:
         with db.connect() as conn:
@@ -567,6 +681,7 @@ def arbitrator_id(id):
     return render_template("arbitrator.html", unitNum=id, data=res)
 
 @app.route('/arbitrator/all', methods=["GET"])
+@login_required
 def arbitrator_all():
     try:
         with db.connect() as conn:
@@ -579,11 +694,13 @@ def arbitrator_all():
 
 # Cradlepoint
 @app.route('/cradlepoints', methods=["GET"])
+@login_required
 def cradlepoint():
 
     return render_template("cradlepoints.html")
 
 @app.route('/cradlepoint/<cardNumber>', methods=["GET"])
+@login_required
 def cradlepoint_id(cardNumber):
     try:
         with db.connect() as conn:
@@ -597,6 +714,7 @@ def cradlepoint_id(cardNumber):
     return render_template("cradlepoint.html", unitNum=id, data=res)
 
 @app.route('/cradlepoint/all', methods=["GET"])
+@login_required
 def cradlepoint_all():
     try:
         with db.connect() as conn:
@@ -610,11 +728,13 @@ def cradlepoint_all():
 
 # Keyboard
 @app.route('/keyboards', methods=["GET"])
+@login_required
 def keyboard():
 
     return render_template("keyboards.html")
 
 @app.route('/keyboard/<serialNumber>', methods=["GET"])
+@login_required
 def keyboard_id(serialNumber):
     try:
         with db.connect() as conn:
@@ -628,6 +748,7 @@ def keyboard_id(serialNumber):
     return render_template("keyboard.html", unitNum=id, data=res)
 
 @app.route('/keyboard/all', methods=["GET"])
+@login_required
 def keyboard_all():
     try:
         with db.connect() as conn:
@@ -639,6 +760,7 @@ def keyboard_all():
         return "it broke " + str(e)
 
 @app.route('/softwarestatus/<serialNumber>', methods=["GET"])
+@login_required
 def softwarestatus(serialNumber):
     try:
         with db.connect() as conn:
@@ -651,11 +773,13 @@ def softwarestatus(serialNumber):
 
 # Front Camera
 @app.route('/frontcameras', methods=["GET"])
+@login_required
 def frontcamera():
 
     return render_template("frontcameras.html")
 
 @app.route('/frontcamera/<cameraID>', methods=["GET"])
+@login_required
 def frontcamera_id(cameraID):
     try:
         with db.connect() as conn:
@@ -669,6 +793,7 @@ def frontcamera_id(cameraID):
     return render_template("frontcamera.html", unitNum=id, data=res)
 
 @app.route('/frontcamera/all', methods=["GET"])
+@login_required
 def frontcamera_all():
     try:
         with db.connect() as conn:
@@ -681,11 +806,13 @@ def frontcamera_all():
 
 # Rear Camera
 @app.route('/rearcameras', methods=["GET"])
+@login_required
 def rearcamera():
 
     return render_template("rearcameras.html")
 
 @app.route('/rearcamera/<cameraID>', methods=["GET"])
+@login_required
 def rearcamera_id(cameraID):
     try:
         with db.connect() as conn:
@@ -699,6 +826,7 @@ def rearcamera_id(cameraID):
     return render_template("rearcamera.html", unitNum=id, data=res)
 
 @app.route('/rearcamera/all', methods=["GET"])
+@login_required
 def rearcamera_all():
     try:
         with db.connect() as conn:
@@ -715,6 +843,7 @@ def rearcamera_all():
 # Do not make the same mistakes that I have 
 # BTW all you need to do is wrap your .execute in trans = conn.begin() and then after, trans.commit()
 @app.route('/deleteVehicle/<unitNumber>', methods=["DELETE"])
+@login_required
 def deleteVehicle(unitNumber):
     try:
         with db.connect() as conn:
@@ -732,6 +861,7 @@ def deleteVehicle(unitNumber):
 #Input: unitNumber, make, model, lastModifyDate, badBoysCaught
 # Output: none
 @app.route('/InsertVehicle', methods=['POST'])
+@login_required
 def InsertVehicle():
     ##get the parameters
     with db.connect() as conn:
@@ -754,6 +884,7 @@ def InsertVehicle():
 # Input: Unit number along with any vehicle attribute you want to update
 # Output: None
 @app.route('/UpdateVehicle', methods=["PUT"])
+@login_required
 def UpdateVehicle():
     with db.connect() as conn:
         try:
