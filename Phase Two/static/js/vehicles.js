@@ -41,6 +41,7 @@ function InsertVehicle() {
         url: '/InsertVehicle',
         success: function (data, textStatus, XmlHttpRequest) {
             alert("Successfully inserted Vehicle");
+            location.reload()
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             alert(errorThrown);
