@@ -76,7 +76,7 @@ function CommonDetailViewModel() {
             url: '/ITComputers',
             success: function (data, textStatus, XmlHttpRequest) {
                 if (data.length > 0) {
-                    self.ITComputers(data[0]);
+                    self.ITComputers(data[0]["Number of Computers"]);
                 } else {
                     self.ITComputers("N/A");
                 }
