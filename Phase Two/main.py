@@ -931,8 +931,8 @@ def UpdateVehicle():
                 return "unitNumber cannot be null"
             make = args.get("make")
             model = args.get("model")
-            lastModifyDate = args.get("lastModifyDate")
-            badBoysCaught = args.get("badBoysCaught")
+            lastModifyDate = args.get("lastModDate")
+            badBoysCaught = args.get("badBoys")
             print(make)
             print(model)
             print(lastModifyDate)
@@ -955,7 +955,7 @@ def UpdateVehicle():
                 conn.execute(query)
             if badBoysCaught != "" and badBoysCaught is not None:
                 print("updating bad boys")
-                query = 'update Vehicle set badBoysCaught = \'' + badBoysCaught + '\' where unitNumber = ' + unitNumber
+                query = 'update Vehicle set badBoysCaught = \'' + str(badBoysCaught) + '\' where unitNumber = ' + unitNumber
                 print(query)
                 conn.execute(query)
             trans.commit()
