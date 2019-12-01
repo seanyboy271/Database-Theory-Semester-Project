@@ -80,3 +80,26 @@ document.getElementById('deleteButton').onclick = function (){
             }
         });
 }
+
+function UpdateVehicle() {
+    let make = document.getElementById('make').value
+    let model = document.getElementById('model').value
+    let lastModDate = document.getElementById('lastModDate').value
+    let badBoys = document.getElementById('BadBoysCaught').value
+
+    let formData = { make: make, model: model, lastModDate: lastModDate, badBoys: badBoys }
+    console.log(formData)
+
+    $.ajax({
+        type: "put",
+        data: formData,
+        url: '/UpdateVehicle',
+        success: function (data, textStatus, XmlHttpRequest) {
+            alert("Successfully updated Vehicle");
+            location.reload()
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert(errorThrown);
+        }
+    });
+}
