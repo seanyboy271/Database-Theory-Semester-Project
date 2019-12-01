@@ -15,11 +15,15 @@
     <!-- Page Content -->
     <h1>{{ unitNum }} <span data-bind="text: ' - ' + vehicle().Make + ' ' + vehicle().model"></span></h1>
     <small class="updated-time" data-bind="text: 'Last updated: ' + vehicle().lastModifyDate"></small>
+    <br />
+    <hr>
+    <button class="btn btn-danger" id='deleteButton'>Delete</button>
+    <button class="btn btn-warning" id='updateButton`'>Update</button>
     <hr>
     <div data-bind="with: vehicle()">
         <div class="row">
-            <div class="col" align="center">
-                <div class="card text-white bg-danger o-hidden h-100" style="width: 145px;">
+            <div class="col" align="">
+                <div class="card text-white bg-danger o-hidden h-100" style="margin-left: 220px; width: 145px;">
                     <div class="card-body">
                         <h1 class="text-center" data-bind="text: badBoysCaught">Vehicles</h1>
                         <small class="">Bad Boys Caught</small>
@@ -27,8 +31,6 @@
                 </div>
             </div>
         </div>
-        <button id = 'deleteButton'>Delete</button>
-        <button id = 'updateButton`'>Update</button>
     </div>
     <br/>
 

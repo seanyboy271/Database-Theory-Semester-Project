@@ -12,6 +12,7 @@
 <!-- Page Content -->
 <h1>Vehicles</h1>
 <hr>
+    <a class="btn btn-success btn-block col-sm-1" href="#" data-toggle="modal" data-target="#createModal">Add +</a>
 <div class="row" data-bind="foreach: vehicles">
     <div class="col-xl-3 col-sm-6 mb-3" style="padding: 8px;">
         <div class="card">
@@ -29,23 +30,42 @@
         </div>
     </div>
 </div>
-<div>
-    <span>UnitNumber</span>
-    <input required id='unitNumber' type="number" />
-    <br>
-    <span>Make</span>
-    <input id='make' type="text" />
-    <br>
-    <span>Model</span>
-    <input id='model' type="text" />
-    <br>
-    <span>Last Modify Date</span>
-    <input id='lastModDate' type="date" />
-    <br>
-    <span>Bad boys caught</span>
-    <input id='BadBoysCaught' type="number" />
-    <br>
-    <button onclick="InsertVehicle()" id='insertButton'>Insert Vehicle</button>
+
+        <!-- Logout Modal-->
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Insert Vehicle</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <span>UnitNumber</span>
+                    <input required id='unitNumber' type="number" />
+                    <br>
+                    <span>Make</span>
+                    <input id='make' type="text" />
+                    <br>
+                    <span>Model</span>
+                    <input id='model' type="text" />
+                    <br>
+                    <span>Last Modify Date</span>
+                    <input id='lastModDate' type="date" />
+                    <br>
+                    <span>Bad boys caught</span>
+                    <input id='BadBoysCaught' type="number" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" onclick="InsertVehicle()" data-dismiss="modal" id='insertButton'>Insert</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 

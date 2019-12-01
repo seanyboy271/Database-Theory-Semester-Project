@@ -73,6 +73,7 @@ document.getElementById('deleteButton').onclick = function (){
             url: '/deleteVehicle/' + self.vehicle().unitNumber,
             success: function (data, textStatus, XmlHttpRequest) {
                 alert("Vehicle Deleted")
+                window.location.href = "/vehicles"
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert(errorThrown);
