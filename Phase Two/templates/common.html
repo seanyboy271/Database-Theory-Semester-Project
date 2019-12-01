@@ -36,12 +36,20 @@
 
         <tr>
             <td>Vehicles with short docks</td>
-            <td><span data-bind="text: VehiclesWithShortDockStands"></span></td>
+            <td>
+                <div data-bind="foreach: VehiclesWithShortDockStands">
+                    <a data-bind="attr: { href: '/vehicle/' + $data.unitNumber }"><span data-bind="text: $data.unitNumber"></span></a><span data-bind="if: $index() != $root.VehiclesWithShortDockStands().length-1 ">,</span>
+                </div>
+            </td>
         </tr>
 
         <tr>
             <td>Vehicles with tall docks</td>
-            <td><span data-bind="text: VehiclesWithTallDockStands"></span></td>
+            <td>
+                <div data-bind="foreach: VehiclesWithTallDockStands">
+                    <a data-bind="attr: { href: '/vehicle/' + $data.unitNumber }"><span data-bind="text: $data.unitNumber"></span></a><span data-bind="if: $index() != $root.VehiclesWithTallDockStands().length-1 ">,</span>
+                </div>
+            </td>
         </tr>
         </tbody>
     </table>
