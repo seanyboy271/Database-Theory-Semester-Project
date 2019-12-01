@@ -18,7 +18,7 @@
     <br />
     <hr>
     <button class="btn btn-danger" id='deleteButton'>Delete</button>
-    <button class="btn btn-warning" id='updateButton`'>Update</button>
+    <button class="btn btn-warning" id='updateButton' data-toggle="modal" data-target="#updateModal">Update</button>
     <hr>
     <div data-bind="with: vehicle()">
         <div class="row">
@@ -53,6 +53,60 @@
             </tbody>
         </table>
     </div>
+
+
+<!-- Update Modal-->
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update Vehicle</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <input type="text" name="unitNumber" id="unitNumber" class="form-control" placeholder="Unit Number">
+                            <label for="unitNumber">UnitNumber</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <input type="text" name="make" id="make" class="form-control" placeholder="Make">
+                            <label for="make">Make</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <input type="text" name="model" id="model" class="form-control" placeholder="Model">
+                            <label for="model">Make</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <input type="date" name="lastModDate" id="lastModDate" class="form-control" placeholder="Last Modify Date">
+                            <label for="lastModDate">Last Modify Date</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <input type="number" name="lastModDate" id="BadBoysCaught" class="form-control" placeholder="Bad Boys Caught">
+                            <label for="BadBoysCaught">Bad Boys Caught</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" onclick="UpdateVehicle()" data-dismiss="modal" id='insertButton'>Update</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 {% endblock %}
