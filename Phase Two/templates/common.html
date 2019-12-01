@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div>
+    <table class="info-table">
+        <tbody>
+         <tr>
+            <td>Vehicle With Recently Uploaded Footage</td>
+            <td><span data-bind="text: VehicleWithRecentlyUploaded"></span></td>
+        </tr>
+        <tr>
+            <td>Newest Arbitrator Version Vehicle</td>
+            <td><span data-bind="text: NewestArbitratorVersionVehicle"></span></td>
+        </tr>
+         <tr>
+            <td>Vehicle with the oldest inspection date</td>
+            <td><span data-bind="text: VehcleWithOldestInpectionDate"></span></td>
+        </tr>
+        <tr>
+            <td>Number of Vehicles With Front And Rear Cameras</td>
+            <td><span data-bind="text: VehiclesWithFrontAndRearCamera"></span></td>
+        </tr>
+        <tr>
+            <td>Vehicles With Keyboard And No Computer</td>
+            <td><span data-bind="text: VehiclesWithKeyboardAndNoComputer"></span></td>
+        </tr>
+        <tr>
+            <td>Arbitrator With Bad Status Codes</td>
+            <td><span data-bind="text: ArbitratorWithBadStatusCodes"></span></td>
+        </tr>
+
+        <tr>
+            <td>IT Computers</td>
+            <td><span data-bind="text: ITComputers"></span></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="/static/js/common.js"></script>
+{% endblock %}
