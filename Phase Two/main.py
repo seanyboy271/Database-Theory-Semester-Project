@@ -838,6 +838,7 @@ def rearcamera_all():
 
 
 @app.route('/common', methods=["GET"])
+@login_required
 def common():
     return render_template('common.html')
 
