@@ -43,22 +43,38 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div>
-                    <span>UnitNumber</span>
-                    <input required id='unitNumber' type="number" />
-                    <br>
-                    <span>Make</span>
-                    <input id='make' type="text" />
-                    <br>
-                    <span>Model</span>
-                    <input id='model' type="text" />
-                    <br>
-                    <span>Last Modify Date</span>
-                    <input id='lastModDate' type="date" />
-                    <br>
-                    <span>Bad boys caught</span>
-                    <input id='BadBoysCaught' type="number" />
-                </div>
+                <form>
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <input type="text" name="unitNumber" id="unitNumber" class="form-control" placeholder="Unit Number">
+                            <label for="unitNumber">UnitNumber</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <input type="text" name="make" id="make" class="form-control" placeholder="Make">
+                            <label for="make">Make</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <input type="text" name="model" id="model" class="form-control" placeholder="Model">
+                            <label for="model">Make</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <input type="date" name="lastModDate" id="lastModDate" class="form-control" placeholder="Last Modify Date">
+                            <label for="lastModDate">Last Modify Date</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label-group">
+                            <input type="number" name="lastModDate" id="BadBoysCaught" class="form-control" placeholder="Bad Boys Caught">
+                            <label for="BadBoysCaught">Bad Boys Caught</label>
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
