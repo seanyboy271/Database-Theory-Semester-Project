@@ -1,37 +1,56 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <!-- Breadcrumbs-->
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-            <a href="/">Inventory</a>
-        </li>
-        <li class="breadcrumb-item active">Vehicles</li>
-    </ol>
+<!-- Breadcrumbs-->
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="/">Inventory</a>
+    </li>
+    <li class="breadcrumb-item active">Vehicles</li>
+</ol>
 
-    <!-- Page Content -->
-    <h1>Vehicles</h1>
-    <hr>
-    <div class="row" data-bind="foreach: vehicles">
-        <div class="col-xl-3 col-sm-6 mb-3" style="padding: 8px;">
-            <div class="card">
-                <div class="card-body">
-                    <h2 data-bind="text: unitNumber "></h2>
-                    <span data-bind="text: Make"></span> <span data-bind="text: model"></span><br/>
-                    <small class="updated-time" data-bind="text: 'Last updated: ' + lastModifyDate"></small>
-                </div>
-                <a class="card-footer clearfix z-1" data-bind="attr: { href: '/vehicle/' + unitNumber }">
-                    <span class="float-left">View</span>
-                    <span class="float-right">
-                  <i class="fas fa-angle-right"></i>
-                </span>
-                </a>
+<!-- Page Content -->
+<h1>Vehicles</h1>
+<hr>
+<div class="row" data-bind="foreach: vehicles">
+    <div class="col-xl-3 col-sm-6 mb-3" style="padding: 8px;">
+        <div class="card">
+            <div class="card-body">
+                <h2 data-bind="text: unitNumber "></h2>
+                <span data-bind="text: Make"></span> <span data-bind="text: model"></span><br />
+                <small class="updated-time" data-bind="text: 'Last updated: ' + lastModifyDate"></small>
             </div>
+            <a class="card-footer clearfix z-1" data-bind="attr: { href: '/vehicle/' + unitNumber }">
+                <span class="float-left">View</span>
+                <span class="float-right">
+                    <i class="fas fa-angle-right"></i>
+                </span>
+            </a>
         </div>
     </div>
+</div>
+<div>
+    <span>UnitNumber</span>
+    <input required id='unitNumber' type="number" />
+    <br>
+    <span>Make</span>
+    <input id='make' type="text" />
+    <br>
+    <span>Model</span>
+    <input id='model' type="text" />
+    <br>
+    <span>Last Modify Date</span>
+    <input id='lastModDate' type="date" />
+    <br>
+    <span>Bad boys caught</span>
+    <input id='BadBoysCaught' type="number" />
+    <br>
+    <button onclick="InsertVehicle()" id='insertButton'>Insert Vehicle</button>
+</div>
+
 
 {% endblock %}
 
 {% block scripts %}
-    <script src="/static/js/vehicles.js"></script>
+<script src="/static/js/vehicles.js"></script>
 {% endblock %}

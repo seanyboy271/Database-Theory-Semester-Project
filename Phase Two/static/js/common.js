@@ -8,6 +8,9 @@ function CommonDetailViewModel() {
     self.VehiclesWithFrontAndRearCamera = ko.observable("Loading...");
     self.VehiclesWithKeyboardAndNoComputer = ko.observable("Loading...");
     self.ArbitratorWithBadStatusCodes = ko.observable("Loading...");
+    self.VehiclesWithShortDockStands = ko.observable("Loading...");
+    self.VehiclesWithTallDockStands = ko.observable("Loading...");
+
 
 
 
@@ -16,7 +19,6 @@ function CommonDetailViewModel() {
             dataType: "json",
             url: '/VehicleWithRecentlyUploaded',
             success: function (data, textStatus, XmlHttpRequest) {
-                console.log("called ajax")
                 if (data.length > 0) {
                     self.VehicleWithRecentlyUploaded(data[0].unitNumber);
                 } else {
@@ -93,7 +95,6 @@ function CommonDetailViewModel() {
             url: '/VehiclesWithFrontAndRearCamera',
             success: function (data, textStatus, XmlHttpRequest) {
                 if (data.length > 0) {
-                    console.log(data)
                     data = data[0]
                     self.VehiclesWithFrontAndRearCamera(data['Number of Vehicles']);
                 } else {
@@ -145,6 +146,42 @@ function CommonDetailViewModel() {
         });
     };
 
+    self.getVehiclesWithShortDockStands = function() {
+        $.ajax({
+            dataType: "json",
+            url: '/VehiclesWithDockType?dockType=short',
+            success: function (data, textStatus, XmlHttpRequest) {
+                if (data.length > 0) {
+                    self.VehiclesWithShortDockStands(data);
+                } else {
+                    self.VehiclesWithShortDockStands("N/A");
+                }
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    };
+
+    self.getVehiclesWithTallDockStands = function() {
+        $.ajax({
+            dataType: "json",
+            url: '/VehiclesWithDockType?dockType=tall',
+            success: function (data, textStatus, XmlHttpRequest) {
+                if (data.length > 0) {
+                    self.VehiclesWithTallDockStands(data);
+                } else {
+                    self.VehiclesWithTallDockStands("N/A");
+                }
+
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    };
+
 
     self.getITComputers();
     self.getNewestArbitratorVersionVehicle();
@@ -153,6 +190,8 @@ function CommonDetailViewModel() {
     self.getVehiclesWithFrontAndRearCamera();
     self.getVehiclesWithKeyboardAndNoComputer();
     self.getArbitratorWithBadStatusCodes();
+    self.getVehiclesWithShortDockStands();
+    self.getVehiclesWithTallDockStands();
 
     return self;
 }

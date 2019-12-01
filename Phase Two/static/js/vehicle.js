@@ -58,9 +58,24 @@ function VehicleDetailViewModel(res) {
         });
     };
 
+
+
     self.getCableColor();
     self.getPCName();
     self.getCradlepointCardNumber();
 
     return self;
+}
+
+document.getElementById('deleteButton').onclick = function (){
+        $.ajax({
+            type: "delete",
+            url: '/deleteVehicle/' + self.vehicle().unitNumber,
+            success: function (data, textStatus, XmlHttpRequest) {
+                alert("Vehicle Deleted")
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
 }

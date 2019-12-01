@@ -145,7 +145,7 @@ def VehiclesOnComPort():
         return "it broke " + str(e)
 
 
-# 3 -Done
+# 3 - Done
 # Input: unitNumber
 # Output: cableColor
 @app.route('/CradlepointCableColor', methods=["GET"])
@@ -164,7 +164,7 @@ def CradlepointCableColor():
 
 
 
-# 4 - 
+# 4 - Done
 # Input: unitNumber
 # Output: PCName
 @app.route('/PCNameInVehicle', methods=["GET"])
@@ -325,7 +325,7 @@ def PCSerialNumber():
         return "it broke " + str(e)
 
 
-# 13 - 
+# 13 - done
 # Input: unitNumber
 # Output: Cradlepoint card number
 @app.route('/CradlePointCardNumber', methods=["GET"])
@@ -385,7 +385,7 @@ def VehiclesWithDockType():
 
     try:
         with db.connect() as conn:
-            query = 'select V.* from Dock join MobileComputerDock MCD on Dock.SerialNumber = MCD.dock_serialNumber join MobileComputer MC on MCD.computer_serialNumber = MC.serialNumber join VehicleComputer VC on MC.serialNumber = VC.serialNumber join Vehicle V on VC.unitNumber = V.unitNumber where Dock.standType = \'' + dockType + '\''
+            query = 'select V.unitNumber from Dock join MobileComputerDock MCD on Dock.SerialNumber = MCD.dock_serialNumber join MobileComputer MC on MCD.computer_serialNumber = MC.serialNumber join VehicleComputer VC on MC.serialNumber = VC.serialNumber join Vehicle V on VC.unitNumber = V.unitNumber where Dock.standType = \'' + dockType + '\''
             result = conn.execute(query).fetchall()
             return json.dumps([dict(r) for r in result])
 
@@ -394,7 +394,7 @@ def VehiclesWithDockType():
 
 
 
-# 17 - 
+# 17 - Done
 # Input: None
 # Output: Number of vehicles with front and rear arbitrator systems
 @app.route('/VehiclesWithFrontAndRearCamera', methods=["GET"])
@@ -409,7 +409,7 @@ def VehiclesWithFrontAndRearCamera():
         return "it broke " + str(e)
 
 
-# 18 - 
+# 18 - done
 # Input: unitNumber
 # Output: Number of Bad Bois caught
 @app.route('/BadBois', methods=["GET"])
@@ -739,14 +739,22 @@ def InsertVehicle():
     ##get the parameters
     with db.connect() as conn:
         try: 
-            args = request.form
+            formData = request.form
+            args = dict(formData)
+            print(args)
             unitNumber = args.get("unitNumber")
+            print(unitNumber)
             make = args.get("make")
+            print(make)
             model = args.get("model")
-            lastModifyDate = args.get("lastModifyDate")
-            badBoysCaught = args.get("badBoysCaught")
+            print(model)
+            lastModifyDate = args.get("lastModDate")
+            print(lastModifyDate)
+            badBoysCaught = args.get("badBoys")
+            print(badBoysCaught)
             trans = conn.begin()
-            query = 'call AddVehicle( ' + unitNumber  + ', \'' + make + '\', \'' + model + '\',\'' + lastModifyDate +  '\',' + badBoysCaught + ')'
+            query = 'call AddVehicle( ' + unitNumber  + ', \'' + make + '\', \'' + model + '\',\'' + str(lastModifyDate) + " 00:00:00" +  '\',' + badBoysCaught + ')'
+            print(query)
             conn.execute(query)
             trans.commit()
             return "Vehicle added"
