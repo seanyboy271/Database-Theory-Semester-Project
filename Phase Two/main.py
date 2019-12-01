@@ -15,7 +15,7 @@ app = Flask(__name__)
 
 
 ##this is for testing
-db = sqlalchemy.create_engine("mysql+pymysql://root:password@/508ProjectDatabase?127.0.0.1/" + str(cloud_sql_connection_name))
+db = sqlalchemy.create_engine("mysql+pymysql://'Web App':password@/508ProjectDatabase?127.0.0.1/" + str(cloud_sql_connection_name))
 
 ##This is for deployment
 # db = sqlalchemy.create_engine(
@@ -112,7 +112,7 @@ def logout():
 
 
 ## 20 QUERIES
-# 1
+# 1 - Done
 # Input: None 
 # Output: unitNumber, lastVideoUploadDate
 @app.route('/VehicleWithRecentlyUploaded', methods=["GET"])
@@ -127,8 +127,7 @@ def VehicleWithRecentlyUploaded():
         return "it broke " + str(e)
 
 
-
-# 2
+# 2 - 
 # Input: gpsComPort
 # Output: unitNumber
 @app.route('/VehiclesOnComPort', methods=["GET"])
@@ -146,7 +145,7 @@ def VehiclesOnComPort():
         return "it broke " + str(e)
 
 
-# 3
+# 3 -Done
 # Input: unitNumber
 # Output: cableColor
 @app.route('/CradlepointCableColor', methods=["GET"])
@@ -165,7 +164,7 @@ def CradlepointCableColor():
 
 
 
-# 4
+# 4 - 
 # Input: unitNumber
 # Output: PCName
 @app.route('/PCNameInVehicle', methods=["GET"])
@@ -183,7 +182,7 @@ def PCNameInVehicle():
         return "it broke " + str(e)
 
 
-# 5
+# 5 - Done
 # Input: None
 # Output: unitNumber
 @app.route('/NewestArbitratorVersionVehicle', methods=["GET"])
@@ -199,7 +198,7 @@ def NewestArbitratorVersionVehicle():
 
 
 
-# 6
+# 6 - 
 # Input: mobileComputerSerialNumber
 # Output: computer model
 @app.route('/MobileComputerModel', methods=["GET"])
@@ -218,7 +217,7 @@ def MobileComputerModel():
 
 
 
-# 7
+# 7 - 
 # Input: keyboard serial number
 # Output: hasStickyKeys
 @app.route('/HasStickyKeys', methods=["GET"])
@@ -237,7 +236,7 @@ def HasStickyKeys():
 
 
 
-# 8
+# 8 - 
 # Input: PCName
 # Output: dock serialNumber
 @app.route('/ComputerDock', methods=["GET"])
@@ -256,7 +255,7 @@ def ComputerDock():
 
 
 
-# 9
+# 9 - 
 # Input: unitNumber
 # Output: lastModifyDate
 @app.route('/LatModifyDate', methods=["GET"])
@@ -275,7 +274,7 @@ def LatModifyDate():
 
 
 
-# 10
+# 10 - Done
 # Input: none
 # Output: unitNumber, lastModifyDate
 @app.route('/VehcleWithOldestInpectionDate', methods=["GET"])
@@ -291,7 +290,7 @@ def VehcleWithOldestInpectionDate():
     
 
 
-# 11
+# 11 - 
 # Input: PCName
 # Output: unitNumber
 @app.route('/VehicleWithPC', methods=["GET"])
@@ -308,7 +307,7 @@ def VehicleWithPC():
     except Exception as e:
         return "it broke " + str(e)
 
-# 12
+# 12 - 
 # Input: PCName
 # Output: serialNumber
 @app.route('/PCSerialNumber', methods=["GET"])
@@ -326,7 +325,7 @@ def PCSerialNumber():
         return "it broke " + str(e)
 
 
-# 13
+# 13 - 
 # Input: unitNumber
 # Output: Cradlepoint card number
 @app.route('/CradlePointCardNumber', methods=["GET"])
@@ -344,7 +343,7 @@ def CradlePointCardNumber():
         return "it broke " + str(e)
 
 
-# 14
+# 14 - Done
 # Input: None
 # Output: Number of computers being used by IT
 @app.route('/ITComputers', methods=["GET"])
@@ -358,7 +357,7 @@ def ITComputers():
     except Exception as e:
         return "it broke " + str(e)
 
-# 15
+# 15 - 
 # Input: PCName
 # Output: bitlocker key
 @app.route('/BitlockerKey', methods=["GET"])
@@ -376,7 +375,7 @@ def BitlockerKey():
         return "it broke " + str(e)
 
 
-# 16
+# 16 - 
 # Input: dockType
 # Output: Cars with short dock stands
 @app.route('/VehiclesWithDockType', methods=["GET"])
@@ -395,7 +394,7 @@ def VehiclesWithDockType():
 
 
 
-# 17
+# 17 - 
 # Input: None
 # Output: Number of vehicles with front and rear arbitrator systems
 @app.route('/VehiclesWithFrontAndRearCamera', methods=["GET"])
@@ -410,7 +409,7 @@ def VehiclesWithFrontAndRearCamera():
         return "it broke " + str(e)
 
 
-# 18
+# 18 - 
 # Input: unitNumber
 # Output: Number of Bad Bois caught
 @app.route('/BadBois', methods=["GET"])
@@ -428,7 +427,7 @@ def BadBois():
         return "it broke " + str(e)
 
 
-# 19
+# 19 - Done
 # Input: None
 # Output: Computers that have a keyboard but no computer
 @app.route('/VehiclesWithKeyboardAndNoComputer', methods=["GET"])
@@ -443,7 +442,7 @@ def VehiclesWithKeyboardAndNoComputer():
         return "it broke " + str(e)
 
 
-# 20
+# 20 - Done
 # Input: None
 # Output: Arbitrator systems with bad status codes
 @app.route('/ArbitratorWithBadStatusCodes', methods=["GET"])
@@ -709,6 +708,10 @@ def rearcamera_all():
     except Exception as e:
         return "it broke " + str(e)
 
+
+@app.route('/common', methods=["GET"])
+def common():
+    return render_template('common.html')
 
 ##It took me hours to realize this.
 #You MUST explicitly commit your transaction when trying to call a stored procedure or really doing anything other than selecting
