@@ -923,31 +923,40 @@ def InsertVehicle():
 @app.route('/UpdateVehicle', methods=["PUT"])
 @login_required
 def UpdateVehicle():
-    if current_user.role != "Admin":
-        return 'You do not have permission to complete this action'
     with db.connect() as conn:
         try:
             args = request.form
             unitNumber = args.get("unitNumber")
-            if unitNumber is None:
+            if unitNumber is None or unitNumber == "":
                 return "unitNumber cannot be null"
             make = args.get("make")
             model = args.get("model")
             lastModifyDate = args.get("lastModifyDate")
             badBoysCaught = args.get("badBoysCaught")
+            print(make)
+            print(model)
+            print(lastModifyDate)
+            print(badBoysCaught)
             trans = conn.begin()
-            if make is not None: 
+            if make != "" and make is not None:
                 query = 'update Vehicle set make = \'' + make + '\' where unitNumber = ' + unitNumber
+                print(query)
                 conn.execute(query)
-            if model is not None:
+            if model != "" and model is not None:
+                print("updating model")
                 query = 'update Vehicle set model = \'' + model + '\' where unitNumber = ' + unitNumber
+                print(query)
                 conn.execute(query)
-            if lastModifyDate is not None:
+            if lastModifyDate != "" and lastModifyDate is not None:
+                print("updating date")
                 #This is a stored procedure since we need to convert the lastModify date string into a datetime object before the update
-                query = 'call UpdateModifyDate( ' + unitNumber + ' , \'' + lastModifyDate + '\')'
+                query = 'call UpdateModifyDate( ' + unitNumber + ' , \'' + str(lastModifyDate) + " 00:00:00" + '\')'
+                print(query)
                 conn.execute(query)
-            if badBoysCaught is not None:
+            if badBoysCaught != "" and badBoysCaught is not None:
+                print("updating bad boys")
                 query = 'update Vehicle set badBoysCaught = \'' + badBoysCaught + '\' where unitNumber = ' + unitNumber
+                print(query)
                 conn.execute(query)
             trans.commit()
             return "Vehicle Updated"
