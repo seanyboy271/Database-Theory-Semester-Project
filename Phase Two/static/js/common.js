@@ -152,6 +152,7 @@ function CommonDetailViewModel() {
             url: '/VehiclesWithDockType?dockType=short',
             success: function (data, textStatus, XmlHttpRequest) {
                 if (data.length > 0) {
+                    console.log(data);
                     self.VehiclesWithShortDockStands(data);
                 } else {
                     self.VehiclesWithShortDockStands("N/A");
